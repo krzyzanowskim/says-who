@@ -5,10 +5,10 @@
 // wasn't sure about.
 
 (() => {
-  if (window.__plainEnglish) return;
-  window.__plainEnglish = true;
+  if (window.__inOtherWords) return;
+  window.__inOtherWords = true;
   // Lets a person (or a test) check which build is running on the page.
-  document.documentElement.dataset.plainEnglish = chrome.runtime.getManifest().version;
+  document.documentElement.dataset.inOtherWords = chrome.runtime.getManifest().version;
 
   // LinkedIn changes its markup often. Everything the script relies on is listed here,
   // most specific first, so a breakage is a one-line fix.
@@ -42,7 +42,7 @@
     actionLabel: /^(like|react|comment|repost|send|share)\b/i,
   };
 
-  const OURS = '.lpe-veil, .lpe-mark, .lpe-defs';
+  const OURS = '.iow-veil, .iow-mark, .iow-defs';
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   let settings = { enabled: true, minWords: 30, autoLoad: true, hasKey: false };
   let alive = true;
@@ -202,7 +202,7 @@
         retryAt: 0,
       };
       posts.set(root, next);
-      root.dataset.lpe = next.state;
+      root.dataset.iow = next.state;
       if (next.state === 'waiting') {
         nearObserver.observe(root);
         seenObserver.observe(root);
@@ -242,12 +242,12 @@
     if (!info || info.state !== 'waiting' || Date.now() < info.retryAt) return;
     if (info.truncated) {
       info.state = 'expanding';
-      root.dataset.lpe = 'expanding';
+      root.dataset.iow = 'expanding';
       expand(root, info).then((ok) => {
         if (posts.get(root) !== info) return;
         if (!ok || countWords(info.text) < settings.minWords) {
           info.state = 'short';
-          root.dataset.lpe = 'short';
+          root.dataset.iow = 'short';
           release(root, info);
           nearObserver.unobserve(root);
           seenObserver.unobserve(root);
@@ -259,7 +259,7 @@
       return;
     }
     info.state = 'asking';
-    root.dataset.lpe = 'asking';
+    root.dataset.iow = 'asking';
     queue.push(root);
     drain();
   }
@@ -320,7 +320,7 @@
 
     if (result.status === 'translated') {
       info.state = 'ready';
-      root.dataset.lpe = 'ready';
+      root.dataset.iow = 'ready';
       if (restoredKeys.has(info.key)) return unstamp(root, info, { animate: false });
       place(root, info);
       return;
@@ -329,7 +329,7 @@
       // Try again the next time the post comes near the viewport.
       info.state = 'waiting';
       info.retryAt = Date.now() + 20000;
-      root.dataset.lpe = 'waiting';
+      root.dataset.iow = 'waiting';
       release(root, info);
       nearObserver.unobserve(root);
       setTimeout(() => nearObserver.observe(root), 20000);
@@ -337,7 +337,7 @@
     }
     // Unsure, real content, sensitive, no key, paused: the post stays exactly as written.
     info.state = result.status === 'unchanged' ? 'kept' : 'skipped';
-    root.dataset.lpe = info.state;
+    root.dataset.iow = info.state;
     release(root, info);
     nearObserver.unobserve(root);
     seenObserver.unobserve(root);
@@ -379,7 +379,7 @@
   const noteObserver = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
-        const veil = entry.target.closest('.lpe-veil');
+        const veil = entry.target.closest('.iow-veil');
         if (!veil || !veil.isConnected) {
           noteObserver.unobserve(entry.target);
           continue;
@@ -398,10 +398,10 @@
   );
 
   function reveal(veil) {
-    if (!veil.classList.contains('lpe-waiting')) return;
-    const note = veil.querySelector('.lpe-note');
+    if (!veil.classList.contains('iow-waiting')) return;
+    const note = veil.querySelector('.iow-note');
     if (note) noteObserver.unobserve(note);
-    veil.classList.remove('lpe-waiting');
+    veil.classList.remove('iow-waiting');
   }
 
   const playQueue = [];
@@ -418,13 +418,13 @@
     const veil = playQueue.shift();
     if (!veil) return;
     // Scrolled away again while it waited its turn: the observer queues it next time.
-    if (!veil.isConnected || !veil.classList.contains('lpe-waiting') || veil.dataset.inView !== '1') return pumpPlays();
-    const note = veil.querySelector('.lpe-note');
+    if (!veil.isConnected || !veil.classList.contains('iow-waiting') || veil.dataset.inView !== '1') return pumpPlays();
+    const note = veil.querySelector('.iow-note');
     if (note) noteObserver.unobserve(note);
-    veil.classList.remove('lpe-waiting');
-    veil.classList.add('lpe-landing');
+    veil.classList.remove('iow-waiting');
+    veil.classList.add('iow-landing');
     // Stop replaying the pen strokes when the veil is refitted later.
-    setTimeout(() => veil.classList.remove('lpe-landing'), 1400);
+    setTimeout(() => veil.classList.remove('iow-landing'), 1400);
     playing = true;
     setTimeout(() => {
       playing = false;
@@ -613,7 +613,7 @@
   // A red pen line through every visible line of the original, wobbling a little
   // differently on each post.
   function scribble(veil, textEl, root) {
-    const svg = veil.querySelector('.lpe-scribbles');
+    const svg = veil.querySelector('.iow-scribbles');
     if (!svg) return;
     svg.replaceChildren();
     if (!textEl) return;
@@ -624,14 +624,14 @@
     const lines = textLines(textEl).filter((l) => l.mid > box.top + 2 && l.mid < limit);
     const NS = 'http://www.w3.org/2000/svg';
     // The pen goes around the handwriting: a mask with a gap for each written line.
-    const id = `lpe-around-${++maskCount}`;
+    const id = `iow-around-${++maskCount}`;
     const mask = document.createElementNS(NS, 'mask');
     mask.setAttribute('id', id);
     mask.setAttribute('maskUnits', 'userSpaceOnUse');
     const paper = document.createElementNS(NS, 'rect');
     Object.entries({ x: -20, y: -20, width: box.width + 40, height: box.height + 40, fill: '#fff' }).forEach(([k, v]) => paper.setAttribute(k, v));
     mask.append(paper);
-    const note = veil.querySelector('.lpe-note');
+    const note = veil.querySelector('.iow-note');
     for (const r of note ? textLines(note) : []) {
       const gap = document.createElementNS(NS, 'rect');
       const half = r.height / 2 + 3;
@@ -675,8 +675,8 @@
     veil.style.top = `${top}px`;
     veil.style.height = `${height}px`;
     // Short posts leave less room under the header, so the handwriting steps down in size.
-    veil.classList.toggle('lpe-compact', height < 120);
-    veil.classList.toggle('lpe-tiny', height < 84);
+    veil.classList.toggle('iow-compact', height < 120);
+    veil.classList.toggle('iow-tiny', height < 84);
     const radius = getComputedStyle(root).borderBottomLeftRadius;
     veil.style.borderRadius = top + height >= box.height - 1 ? `0 0 ${radius} ${radius}` : '0';
     let split = height;
@@ -684,21 +684,21 @@
       const textBottom = Math.min(text.getBoundingClientRect().bottom, clipBottom(text, root));
       split = Math.max(0, Math.min(height, textBottom - box.top - top + 6));
     }
-    veil.style.setProperty('--lpe-split', `${Math.round(split)}px`);
+    veil.style.setProperty('--iow-split', `${Math.round(split)}px`);
     // The handwriting sits in the middle of the covered area. On a tall post that can be
     // below the screen at first, which is fine: it only plays once it is fully in view.
-    const note = veil.querySelector('.lpe-note');
+    const note = veil.querySelector('.iow-note');
     if (note) {
       const noteHeight = note.getBoundingClientRect().height;
       const offset = Math.max(6, (height - noteHeight) / 2);
-      veil.style.setProperty('--lpe-note-top', `${Math.round(offset)}px`);
+      veil.style.setProperty('--iow-note-top', `${Math.round(offset)}px`);
     }
     scribble(veil, text, root);
   }
 
   const resizes = new ResizeObserver((entries) => {
     for (const entry of entries) {
-      const veil = entry.target.querySelector(':scope > .lpe-veil');
+      const veil = entry.target.querySelector(':scope > .iow-veil');
       if (veil) fit(entry.target, veil);
     }
   });
@@ -706,31 +706,31 @@
   function buildVeil(root, info) {
     const { result } = info;
     const seed = seedOf(info.key);
-    const veil = el('div', 'lpe-veil');
+    const veil = el('div', 'iow-veil');
     veil.dataset.tone = isDark(root) ? 'dark' : 'light';
     veil.dataset.seed = String(seed);
-    veil.style.setProperty('--lpe-cover', surface(root));
+    veil.style.setProperty('--iow-cover', surface(root));
     veil.setAttribute('role', 'group');
-    veil.setAttribute('aria-label', 'Plain English translation of this post');
+    veil.setAttribute('aria-label', 'This post in other words');
 
     // Two layers of frosted paper: a light one over the post's text, so the crossed-out
     // words still show through, and a heavy one over images and video.
-    const frostText = el('div', 'lpe-frost lpe-frost-text');
-    const frostMedia = el('div', 'lpe-frost lpe-frost-media');
+    const frostText = el('div', 'iow-frost iow-frost-text');
+    const frostMedia = el('div', 'iow-frost iow-frost-media');
 
     const lines = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    lines.setAttribute('class', 'lpe-scribbles');
+    lines.setAttribute('class', 'iow-scribbles');
     lines.setAttribute('aria-hidden', 'true');
 
     // Written at a slightly different angle on every post, the way a hand does.
-    const note = el('div', 'lpe-note');
+    const note = el('div', 'iow-note');
     const tilt = -3.2 + ((seed % 1000) / 1000) * 2.6;
-    note.style.setProperty('--lpe-tilt', `${tilt.toFixed(2)}deg`);
-    note.append(el('p', 'lpe-says', result.sentence));
-    const tally = el('p', 'lpe-tally');
+    note.style.setProperty('--iow-tilt', `${tilt.toFixed(2)}deg`);
+    note.append(el('p', 'iow-says', result.sentence));
+    const tally = el('p', 'iow-tally');
     const count = el('span', null, `${result.removed.toLocaleString()} ${result.removed === 1 ? 'word' : 'words'} cut, ${result.percent}% shorter`);
     count.title = `${result.before.toLocaleString()} words down to ${result.after}. Jev was ${Math.round(result.confidence * 100)}% sure.`;
-    const button = el('button', 'lpe-button', 'Show original');
+    const button = el('button', 'iow-button', 'Show original');
     button.type = 'button';
     button.addEventListener('click', (event) => {
       event.stopPropagation();
@@ -745,11 +745,11 @@
   }
 
   function buildMark(root, info) {
-    const mark = el('button', 'lpe-mark');
+    const mark = el('button', 'iow-mark');
     mark.type = 'button';
     mark.dataset.tone = isDark(root) ? 'dark' : 'light';
-    mark.title = `In plain English: ${info.result.sentence}`;
-    mark.setAttribute('aria-label', 'Show the plain English again');
+    mark.title = `In other words: ${info.result.sentence}`;
+    mark.setAttribute('aria-label', 'Show the translation again');
     mark.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 10.5c2.2-3.6 3.4 2.8 5.6-.6s3.2-2.4 6.4-4.4"/></svg>';
     mark.addEventListener('click', (event) => {
       event.stopPropagation();
@@ -769,13 +769,13 @@
   }
 
   function clearOurs(root) {
-    root.querySelectorAll(':scope > .lpe-veil, :scope > .lpe-mark').forEach((n) => n.remove());
-    root.classList.remove('lpe-stamped', 'lpe-marked');
+    root.querySelectorAll(':scope > .iow-veil, :scope > .iow-mark').forEach((n) => n.remove());
+    root.classList.remove('iow-stamped', 'iow-marked');
     resizes.unobserve(root);
   }
 
   function anchorRoot(root) {
-    if (getComputedStyle(root).position === 'static') root.classList.add('lpe-anchor');
+    if (getComputedStyle(root).position === 'static') root.classList.add('iow-anchor');
   }
 
   // The handwriting face arrives as bytes from the background worker and is registered
@@ -786,7 +786,7 @@
       fontsLoading = send({ type: 'fonts' }).then(async (files) => {
         for (const { weight, range, data } of files || []) {
           const bytes = Uint8Array.from(atob(data), (c) => c.charCodeAt(0));
-          const face = new FontFace('LPE Kalam', bytes, { weight, unicodeRange: range, display: 'swap' });
+          const face = new FontFace('IOW Kalam', bytes, { weight, unicodeRange: range, display: 'swap' });
           document.fonts.add(await face.load());
         }
       }).catch(() => {});
@@ -797,7 +797,7 @@
   function stamp(root, info, { animate, focus = false }) {
     loadFonts();
     info.state = 'stamped';
-    root.dataset.lpe = 'stamped';
+    root.dataset.iow = 'stamped';
     stampedKeys.add(info.key);
     stampedKeys.add(info.previewKey);
     seenObserver.unobserve(root);
@@ -805,20 +805,20 @@
     anchorRoot(root);
     const veil = buildVeil(root, info);
     // Animated ones wait, invisible, until their handwriting is fully on screen.
-    if (animate && !reduceMotion.matches) veil.classList.add('lpe-waiting');
+    if (animate && !reduceMotion.matches) veil.classList.add('iow-waiting');
     root.append(veil);
-    root.classList.add('lpe-stamped');
+    root.classList.add('iow-stamped');
     fit(root, veil);
-    if (veil.classList.contains('lpe-waiting')) noteObserver.observe(veil.querySelector('.lpe-note'));
+    if (veil.classList.contains('iow-waiting')) noteObserver.observe(veil.querySelector('.iow-note'));
     resizes.observe(root);
-    if (focus) veil.querySelector('.lpe-button')?.focus({ preventScroll: true });
+    if (focus) veil.querySelector('.iow-button')?.focus({ preventScroll: true });
   }
 
   function unstamp(root, info, { animate, focus = false }) {
     info.state = 'restored';
-    root.dataset.lpe = 'restored';
+    root.dataset.iow = 'restored';
     restoredKeys.add(info.key);
-    const veil = root.querySelector(':scope > .lpe-veil');
+    const veil = root.querySelector(':scope > .iow-veil');
     const finish = () => {
       clearOurs(root);
       // A post that was cut short gets the rest of its text shown now the reader asked for it.
@@ -826,26 +826,26 @@
       anchorRoot(root);
       const mark = buildMark(root, info);
       root.append(mark);
-      root.classList.add('lpe-marked');
+      root.classList.add('iow-marked');
       placeMark(root, mark);
       if (focus) mark.focus({ preventScroll: true });
     };
     if (veil && animate && !reduceMotion.matches) {
-      veil.classList.add('lpe-lifting');
+      veil.classList.add('iow-lifting');
       setTimeout(finish, 180);
     } else finish();
   }
 
   function ensureStamp(root, info) {
-    if (!root.querySelector(':scope > .lpe-veil')) stamp(root, info, { animate: false });
+    if (!root.querySelector(':scope > .iow-veil')) stamp(root, info, { animate: false });
   }
 
   function ensureMark(root, info) {
-    if (!root.querySelector(':scope > .lpe-mark')) {
+    if (!root.querySelector(':scope > .iow-mark')) {
       anchorRoot(root);
       const mark = buildMark(root, info);
       root.append(mark);
-      root.classList.add('lpe-marked');
+      root.classList.add('iow-marked');
       placeMark(root, mark);
     }
   }
@@ -855,17 +855,17 @@
     seenObserver.unobserve(root);
     unhold(info?.holder);
     clearOurs(root);
-    root.classList.remove('lpe-anchor');
-    delete root.dataset.lpe;
+    root.classList.remove('iow-anchor');
+    delete root.dataset.iow;
     posts.delete(root);
     if (info) info.state = 'gone';
   }
 
   function undoAll() {
     for (const root of roots()) undo(root, posts.get(root));
-    document.querySelectorAll('.lpe-veil, .lpe-mark').forEach((n) => n.remove());
-    document.querySelectorAll('.lpe-stamped, .lpe-marked, .lpe-anchor').forEach((n) => {
-      n.classList.remove('lpe-stamped', 'lpe-marked', 'lpe-anchor');
+    document.querySelectorAll('.iow-veil, .iow-mark').forEach((n) => n.remove());
+    document.querySelectorAll('.iow-stamped, .iow-marked, .iow-anchor').forEach((n) => {
+      n.classList.remove('iow-stamped', 'iow-marked', 'iow-anchor');
     });
     for (const node of [...held.keys()]) unhold(node);
   }

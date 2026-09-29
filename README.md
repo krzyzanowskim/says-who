@@ -1,6 +1,6 @@
-# LinkedIn Plain English
+# In Other Words
 
-A Chrome extension that crosses out verbose LinkedIn posts and writes, in red pen, the one sentence they're actually saying.
+LinkedIn posts in plain English. A Chrome extension that crosses out verbose posts and writes, in red pen, the one sentence they're actually saying.
 
 <img src="docs/screenshot.png" alt="Three LinkedIn posts crossed out in red pen, with 'We raised $14M.', 'Here's a story with a moral.' and 'Please engage with this post.' written over them" width="480">
 
@@ -8,9 +8,9 @@ It uses [TypeSafe](https://typesafe.ai)'s Jev model to work out what each post i
 
 ## Install
 
-1. Download `linkedin-plain-english-v1.0.0.zip` from [Releases](../../releases/latest) (it's also in the `release` folder) and unzip it.
+1. Download `in-other-words-v1.1.0.zip` from [Releases](../../releases/latest) (it's also in the `release` folder) and unzip it.
 2. Open `chrome://extensions` and turn on **Developer mode** (top right).
-3. Click **Load unpacked** and choose the unzipped `linkedin-plain-english-v1.0.0` folder.
+3. Click **Load unpacked** and choose the unzipped `in-other-words-v1.1.0` folder.
 
 ## Set up
 

@@ -228,7 +228,7 @@ async function refreshBadge() {
   await chrome.action.setBadgeBackgroundColor({ color: '#B8321F' });
   await chrome.action.setBadgeText({ text: needsKey ? '!' : settings.enabled ? '' : 'off' });
   await chrome.action.setTitle({
-    title: needsKey ? 'LinkedIn Plain English: add your TypeSafe key' : settings.enabled ? 'LinkedIn Plain English' : 'LinkedIn Plain English (paused)',
+    title: needsKey ? 'In Other Words: add your TypeSafe key' : settings.enabled ? 'In Other Words' : 'In Other Words (paused)',
   });
 }
 

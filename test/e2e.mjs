@@ -93,7 +93,7 @@ function mockAnswer(body) {
 
 // ---------- browser ----------
 
-const profile = await mkdtemp(path.join(os.tmpdir(), 'lpe-profile-'));
+const profile = await mkdtemp(path.join(os.tmpdir(), 'iow-profile-'));
 const context = await chromium.launchPersistentContext(profile, {
   channel: 'chromium',
   headless: !HEADED,
@@ -139,23 +139,23 @@ const firstHeights = await page.evaluate(() =>
 await shot('01-before');
 
 // Catch a stamp part-way down.
-await page.waitForSelector('.lpe-landing', { timeout: 30000 }).catch(() => {});
+await page.waitForSelector('.iow-landing', { timeout: 30000 }).catch(() => {});
 await page.waitForTimeout(140);
 await shot('02-stamping');
 await page.waitForTimeout(1600);
 await shot('03-after');
 // Before any scrolling: nothing below the screen has played yet, nothing fully in view is still waiting.
 const playState = await page.evaluate(() =>
-  [...document.querySelectorAll('.lpe-veil')].map((v) => {
-    const n = v.querySelector('.lpe-note').getBoundingClientRect();
-    return { inView: n.top >= 0 && n.bottom <= innerHeight * 0.88, waiting: v.classList.contains('lpe-waiting') };
+  [...document.querySelectorAll('.iow-veil')].map((v) => {
+    const n = v.querySelector('.iow-note').getBoundingClientRect();
+    return { inView: n.top >= 0 && n.bottom <= innerHeight * 0.88, waiting: v.classList.contains('iow-waiting') };
   }),
 );
 // The overlay must add no height of its own: each written-over post measures the same
 // with its overlay hidden.
 const overlayHeights = await page.evaluate(() =>
-  [...document.querySelectorAll('[data-lpe="stamped"]')].map((root) => {
-    const veil = root.querySelector(':scope > .lpe-veil');
+  [...document.querySelectorAll('[data-iow="stamped"]')].map((root) => {
+    const veil = root.querySelector(':scope > .iow-veil');
     const withVeil = root.getBoundingClientRect().height;
     veil.style.display = 'none';
     const without = root.getBoundingClientRect().height;
@@ -164,9 +164,9 @@ const overlayHeights = await page.evaluate(() =>
   }),
 );
 const pen = await page.evaluate(() => ({
-  font: document.fonts.check('700 20px "LPE Kalam"') && [...document.fonts].some((f) => f.family.includes('LPE Kalam') && f.status === 'loaded'),
-  fontUsed: getComputedStyle(document.querySelector('.lpe-says') || document.body).fontFamily,
-  strikes: [...document.querySelectorAll('.lpe-veil')].map((v) => v.querySelectorAll('.lpe-scribbles path').length),
+  font: document.fonts.check('700 20px "IOW Kalam"') && [...document.fonts].some((f) => f.family.includes('IOW Kalam') && f.status === 'loaded'),
+  fontUsed: getComputedStyle(document.querySelector('.iow-says') || document.body).fontFamily,
+  strikes: [...document.querySelectorAll('.iow-veil')].map((v) => v.querySelectorAll('.iow-scribbles path').length),
 }));
 const resized = overlayHeights.filter((d) => Math.abs(d) > 1);
 
@@ -184,71 +184,71 @@ await page.evaluate(() => window.scrollTo(0, 0));
 await page.waitForTimeout(400);
 
 const stuckWaiting = await page.evaluate(() =>
-  [...document.querySelectorAll('.lpe-veil.lpe-waiting')].map((v) => {
+  [...document.querySelectorAll('.iow-veil.iow-waiting')].map((v) => {
     const root = v.parentElement;
     const r = root.getBoundingClientRect();
-    const n = v.querySelector('.lpe-note').getBoundingClientRect();
+    const n = v.querySelector('.iow-note').getBoundingClientRect();
     return { post: Math.round(r.height), note: Math.round(n.height), veil: Math.round(v.getBoundingClientRect().height), noteTopInVeil: Math.round(n.top - v.getBoundingClientRect().top) };
   }),
 );
 const loads = SDUI ? await page.evaluate(() => window.__loads) : null;
 // Posts left as written stay exactly as LinkedIn drew them: "… more" is never pressed.
 const keptOpen = SDUI ? null : await page.evaluate(() =>
-  [...document.querySelectorAll('[data-lpe="kept"]')].map((el) => Boolean(el.querySelector('.feed-shared-inline-show-more-text.open'))),
+  [...document.querySelectorAll('[data-iow="kept"]')].map((el) => Boolean(el.querySelector('.feed-shared-inline-show-more-text.open'))),
 );
 const states = await page.evaluate(() =>
-  [...document.querySelectorAll('[data-lpe]')].map((el) => ({
+  [...document.querySelectorAll('[data-iow]')].map((el) => ({
     author: el.querySelector('.update-components-actor__title [aria-hidden], .n1 span')?.textContent,
     headerVisible: (() => {
       const head = el.querySelector('.update-components-actor, .actor');
-      const veil = el.querySelector(':scope > .lpe-veil');
+      const veil = el.querySelector(':scope > .iow-veil');
       if (!head || !veil) return true;
       return head.getBoundingClientRect().bottom <= veil.getBoundingClientRect().top + 1;
     })(),
     words: el.querySelector('[data-testid="expandable-text-box"], .update-components-text')?.textContent.split(/\s+/).length,
-    state: el.dataset.lpe,
-    says: el.querySelector('.lpe-says')?.textContent || null,
-    tally: el.querySelector('.lpe-tally')?.textContent || null,
+    state: el.dataset.iow,
+    says: el.querySelector('.iow-says')?.textContent || null,
+    tally: el.querySelector('.iow-tally')?.textContent || null,
   })),
 );
 await shot('04-feed-full', { fullPage: true });
 
 // Lift the first stamp off, then put it back.
-const first = page.locator('.lpe-veil .lpe-button').first();
+const first = page.locator('.iow-veil .iow-button').first();
 await first.click();
 await page.waitForTimeout(700);
 const restored = await page.evaluate(() => {
-  const mark = document.querySelector('.lpe-mark');
+  const mark = document.querySelector('.iow-mark');
   const root = mark?.parentElement;
   return {
     mark: mark?.getAttribute('aria-label'),
-    stampGone: root ? !root.querySelector(':scope > .lpe-veil') : false,
+    stampGone: root ? !root.querySelector(':scope > .iow-veil') : false,
     focus: document.activeElement?.getAttribute('aria-label'),
   };
 });
 await shot('05-restored');
-await page.locator('.lpe-mark').first().click();
+await page.locator('.iow-mark').first().click();
 await page.waitForTimeout(900);
-const recollapsed = await page.evaluate(() => document.querySelectorAll('.lpe-stamped').length);
+const recollapsed = await page.evaluate(() => document.querySelectorAll('.iow-stamped').length);
 
 // A post clipped by CSS: "Show original" must open it fully, with nothing left frozen.
 const clampCheck = SDUI
   ? await page.evaluate(async () => {
       // A post clipped by CSS: after "Show original" it is back exactly as LinkedIn drew it.
-      const root = [...document.querySelectorAll('[data-lpe="stamped"]')].find((r) => r.querySelector('.clamp3'));
+      const root = [...document.querySelectorAll('[data-iow="stamped"]')].find((r) => r.querySelector('.clamp3'));
       if (!root) return { found: false };
       root.scrollIntoView({ block: 'center' });
       await new Promise((r) => setTimeout(r, 2500));
-      root.querySelector('.lpe-veil .lpe-button').click();
+      root.querySelector('.iow-veil .iow-button').click();
       await new Promise((r) => setTimeout(r, 2500));
       const box = root.querySelector('[data-testid="expandable-text-box"]');
       const bar = root.querySelector('.action-bar');
       const frozen = [...root.querySelectorAll('*')].filter((n) => n.style && n.style.height).map((n) => n.tagName + ' ' + n.style.height);
-      return { found: true, untouched: box.classList.contains('clamp3'), frozen, overlaps: box.getBoundingClientRect().bottom > bar.getBoundingClientRect().top + 1, restored: root.dataset.lpe === 'restored' };
+      return { found: true, untouched: box.classList.contains('clamp3'), frozen, overlaps: box.getBoundingClientRect().bottom > bar.getBoundingClientRect().top + 1, restored: root.dataset.iow === 'restored' };
     })
   : null;
 const keptClampOpen = SDUI
-  ? await page.evaluate(() => [...document.querySelectorAll('[data-lpe="kept"]')].map((r) => Boolean(r.querySelector('.open-9f2'))))
+  ? await page.evaluate(() => [...document.querySelectorAll('[data-iow="kept"]')].map((r) => Boolean(r.querySelector('.open-9f2'))))
   : null;
 
 // Reload: every result should come from the saved results, with no new requests.
@@ -286,8 +286,8 @@ const jumpResult = await jumpy.evaluate(async () => {
   let worst = 0;
   let last = start;
   const log = [];
-  const items = () => [...document.querySelectorAll('[data-lpe]')];
-  const snap = () => items().map((e, i) => `${i}:${e.dataset.lpe}@${Math.round(e.getBoundingClientRect().top)}/${Math.round(e.getBoundingClientRect().height)}`).filter((x) => !/@-?\d{5}/.test(x));
+  const items = () => [...document.querySelectorAll('[data-iow]')];
+  const snap = () => items().map((e, i) => `${i}:${e.dataset.iow}@${Math.round(e.getBoundingClientRect().top)}/${Math.round(e.getBoundingClientRect().height)}`).filter((x) => !/@-?\d{5}/.test(x));
   let prev = snap();
   for (let i = 0; i < 45; i++) {
     await new Promise((r) => setTimeout(r, 100));
@@ -304,7 +304,7 @@ const jumpResult = await jumpy.evaluate(async () => {
 });
 const drift = jumpResult.worst;
 if (jumpResult.log.length) console.log(jumpResult.log.join('\n'));
-const jumpStates = await jumpy.evaluate(() => [...document.querySelectorAll('[data-lpe]')].map((e) => e.dataset.lpe).join(' '));
+const jumpStates = await jumpy.evaluate(() => [...document.querySelectorAll('[data-iow]')].map((e) => e.dataset.iow).join(' '));
 console.log(`jump test: top of screen moved at most ${drift}px; states ${jumpStates}`);
 await jumpy.close();
 

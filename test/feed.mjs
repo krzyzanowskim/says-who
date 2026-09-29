@@ -78,7 +78,7 @@ export function feedHtml(posts, { dark = false } = {}) {
 </style>
 </head>
 <body>
-<div class="bar">Feed test harness for LinkedIn Plain English</div>
+<div class="bar">Feed test harness for In Other Words</div>
 <main id="feed">
 ${items}
 </main>

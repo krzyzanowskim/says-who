@@ -1,6 +1,6 @@
 {
-  "name": "linkedin-plain-english",
-  "version": "1.0.0",
+  "name": "in-other-words",
+  "version": "1.1.0",
   "private": true,
   "description": "Chrome extension that collapses verbose LinkedIn posts into the plain sentence they're actually saying, using TypeSafe's Jev model.",
   "license": "MIT",
