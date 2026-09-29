@@ -1,0 +1,291 @@
+/* Injected into linkedin.com. Every selector is prefixed with .lpe- so nothing leaks
+   into LinkedIn's own styles. The red pen sits on top of the post; nothing here changes
+   the size of anything LinkedIn draws. */
+
+/* The handwriting is Kalam, by the Indian Type Foundry, under the SIL Open Font License
+   (fonts/OFL.txt). content.js registers it from memory as 'LPE Kalam', so the extension
+   exposes no files LinkedIn could probe for, and never fetches from a font service. */
+
+.lpe-anchor {
+  position: relative !important;
+}
+
+.lpe-veil,
+.lpe-mark {
+  --lpe-ink: #b8321f;
+  --lpe-muted: color-mix(in srgb, currentColor 62%, transparent);
+  --lpe-hand: 'LPE Kalam', 'Segoe Print', 'Bradley Hand', 'Comic Neue', cursive;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.lpe-veil[data-tone='dark'],
+.lpe-mark[data-tone='dark'] {
+  --lpe-ink: #f28b7d;
+  --lpe-page-ink: #fff;
+}
+
+/* ---------- the corrected post ---------- */
+
+/* Frosted paper laid over the post's text. The original shows through blurred and
+   crossed out, so its shape is there but its words don't compete with the translation. */
+.lpe-veil {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  padding: var(--lpe-note-top, 8px) 16px 6px;
+  cursor: default;
+}
+
+.lpe-frost {
+  position: absolute;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+}
+
+/* Light over the words, so the struck-out original can still be made out. */
+.lpe-frost-text {
+  top: 0;
+  height: var(--lpe-split, 100%);
+  background: color-mix(in srgb, var(--lpe-cover, #fff) 70%, transparent);
+  backdrop-filter: blur(1.6px);
+}
+
+/* Heavy over images and video, which only get in the way of the handwriting. */
+.lpe-frost-media {
+  top: var(--lpe-split, 100%);
+  bottom: 0;
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--lpe-cover, #fff) 55%, transparent);
+  backdrop-filter: blur(12px) saturate(0.85);
+}
+
+.lpe-scribbles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.lpe-scribbles path {
+  fill: none;
+  stroke: var(--lpe-ink);
+  stroke-width: 2.1px;
+  stroke-linecap: round;
+  opacity: 0.8;
+}
+
+/* The halo keeps the handwriting readable where it crosses the struck-out lines. */
+.lpe-note {
+  --lpe-halo: 0 0 2px var(--lpe-cover, #fff), 0 0 6px var(--lpe-cover, #fff), 0 0 12px var(--lpe-cover, #fff);
+  position: relative;
+  max-width: min(100%, 440px);
+  color: var(--lpe-ink);
+  text-align: center;
+  transform: rotate(var(--lpe-tilt, -2deg));
+}
+
+.lpe-note p {
+  margin: 0;
+}
+
+.lpe-says {
+  font-family: var(--lpe-hand);
+  font-size: 25px;
+  line-height: 1.12;
+  font-weight: 700;
+  text-wrap: balance;
+  text-shadow: var(--lpe-halo);
+}
+
+.lpe-tally {
+  margin-top: 2px !important;
+  font-family: var(--lpe-hand);
+  font-size: 15px;
+  line-height: 1.25;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-shadow: var(--lpe-halo);
+}
+
+/* Short posts leave less room under the header, so the writing steps down in size. */
+.lpe-compact {
+  gap: 2px;
+  padding-bottom: 2px;
+}
+
+.lpe-compact .lpe-says {
+  font-size: 17px;
+  line-height: 1.1;
+}
+
+.lpe-compact .lpe-tally {
+  margin-top: 0 !important;
+  font-size: 11.5px;
+}
+
+.lpe-compact .lpe-button {
+  font-size: 11px;
+  padding: 1px 3px;
+}
+
+.lpe-tiny .lpe-says {
+  font-size: 14.5px;
+}
+
+.lpe-tiny .lpe-tally {
+  font-size: 10.5px;
+}
+
+.lpe-tiny .lpe-button {
+  font-size: 10.5px;
+  margin-left: 6px;
+}
+
+/* Sits on the word-count line, in LinkedIn's own type so it reads as a control. */
+.lpe-button {
+  margin: 0 0 0 10px;
+  padding: 2px 4px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: color-mix(in srgb, var(--lpe-page-ink, #000) 60%, transparent);
+  font-family: -apple-system, system-ui, 'Segoe UI', Roboto, sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  text-underline-offset: 2px;
+  text-shadow: var(--lpe-halo);
+  cursor: pointer;
+  vertical-align: 1px;
+  transition: color 120ms ease-out;
+}
+
+.lpe-button:hover {
+  color: var(--lpe-page-ink, #000);
+  text-decoration-color: currentColor;
+}
+
+.lpe-button:focus-visible,
+.lpe-mark:focus-visible {
+  outline: 2px solid var(--lpe-ink);
+  outline-offset: 1px;
+  color: inherit;
+}
+
+/* ---------- after "Show original" ---------- */
+
+/* A small red squiggle in the corner writes the translation back on. */
+.lpe-mark {
+  position: absolute;
+  right: 10px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--lpe-ink);
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 120ms ease-out, background-color 120ms ease-out;
+}
+
+.lpe-mark:hover,
+.lpe-mark:focus-visible {
+  opacity: 1;
+  background: color-mix(in srgb, var(--lpe-ink) 10%, transparent);
+}
+
+.lpe-mark svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+/* ---------- motion ---------- */
+
+/* Ready but not yet on screen: the post looks untouched until the reader gets there. */
+.lpe-waiting {
+  pointer-events: none;
+}
+
+.lpe-waiting > * {
+  opacity: 0;
+}
+
+/* The paper fades in, the pen crosses out each line, then writes the translation. */
+.lpe-landing > .lpe-frost {
+  animation: lpe-veil-in 200ms ease-out both;
+}
+
+.lpe-landing .lpe-scribbles path {
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 1;
+  animation: lpe-strike 240ms calc(120ms + var(--i, 0) * 90ms) cubic-bezier(0.5, 0, 0.3, 1) forwards;
+}
+
+.lpe-landing .lpe-note {
+  animation: lpe-write 560ms 380ms cubic-bezier(0.4, 0, 0.3, 1) both;
+}
+
+.lpe-lifting > * {
+  animation: lpe-veil-out 180ms ease-in both;
+}
+
+@keyframes lpe-veil-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes lpe-veil-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes lpe-strike {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes lpe-write {
+  from {
+    clip-path: inset(-20% 100% -20% -2%);
+  }
+  to {
+    clip-path: inset(-20% -2% -20% -2%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lpe-landing > .lpe-frost,
+  .lpe-landing .lpe-note,
+  .lpe-lifting > * {
+    animation: none !important;
+  }
+
+  .lpe-landing .lpe-scribbles path {
+    animation: none !important;
+    stroke-dashoffset: 0;
+  }
+}

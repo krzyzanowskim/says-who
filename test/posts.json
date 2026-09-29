@@ -1,0 +1,191 @@
+[
+  {
+    "id": "new-job-sample",
+    "author": "Dana Whitlock",
+    "expect": ["new_job"],
+    "org": "Northwind",
+    "role": "Head of Partnerships",
+    "mentions": ["Northwind"],
+    "text": "I'm humbled and honoured to share some personal news. After four incredible years, countless late nights and more lessons than I can count, I've decided it's time for a new chapter. Starting Monday, I'll be joining Northwind as Head of Partnerships. None of this would have been possible without the mentors who believed in me when I didn't believe in myself. To my old team: you made me who I am. To my new team: let's build something special. Here's to growth, gratitude and the road ahead."
+  },
+  {
+    "id": "new-job-standard",
+    "author": "Marcus Oyelaran",
+    "expect": ["new_job"],
+    "org": "Brightloop",
+    "mentions": ["Brightloop"],
+    "text": "I'm happy to share that I'm starting a new position as Senior Product Designer at Brightloop!\n\nThe last few months have been a rollercoaster. I spoke to 40+ companies, did 11 take-home tasks and learned more about myself than I ever expected.\n\nThank you to everyone who sent me a role, reviewed my portfolio at midnight or just checked in. You know who you are 💙\n\nCan't wait to get started. Onwards and upwards! 🚀\n\n#newjob #design #grateful"
+  },
+  {
+    "id": "promotion",
+    "author": "Helena Brisk",
+    "expect": ["promotion"],
+    "text": "Some personal news I've been sitting on for a few weeks. 🎉\n\nI've been promoted to Engineering Manager at Quillpoint.\n\nWhen I joined as an intern six years ago, I couldn't have imagined this. I remember my first code review: 47 comments. I almost cried in the bathroom. Today I get to be the person who makes that first review feel safe.\n\nHuge thanks to my manager, who saw something in me before I did, and to the best team anyone could ask for.\n\nThe work starts now."
+  },
+  {
+    "id": "anniversary",
+    "author": "Tomasz Kerrigan",
+    "expect": ["work_anniversary"],
+    "text": "5 years at Halcyon Freight today. 🎂\n\nFive years ago I walked in not knowing what a bill of lading was. Since then I've worked on three product launches, moved cities twice, and had the privilege of growing a team from 2 to 14 people.\n\nWhat keeps me here? The people. Every single day.\n\nHere's to the next five. 🥂"
+  },
+  {
+    "id": "laid-off",
+    "author": "Rina Castellanos",
+    "expect": ["leaving_job", "job_hunting"],
+    "text": "Yesterday I was one of the 200 people impacted by the layoffs at Tessellate.\n\nI'm proud of what we built. In three years I helped take our data platform from a single Postgres box to a pipeline serving 30 teams.\n\nI'm taking a few days to reset, and then I'm looking for my next role in data engineering or platform work, ideally remote in Europe.\n\nIf you know of anything, I'd be grateful for an intro. And to everyone else affected: I'm rooting for you."
+  },
+  {
+    "id": "open-to-work",
+    "author": "Jae-won Pryce",
+    "expect": ["job_hunting"],
+    "text": "#OpenToWork\n\nAfter three months of searching, I'm still looking for my next role in product marketing.\n\nWhat I bring:\n✅ 7 years in B2B SaaS\n✅ Launched 12 products, including two that crossed $1M ARR in year one\n✅ Built and led a team of 5\n\nI'm open to hybrid roles in London or fully remote. If you're hiring, or know someone who is, my DMs are open. A like or a share would help this reach the right people. 🙏"
+  },
+  {
+    "id": "hiring",
+    "author": "Owen Faraday",
+    "expect": ["hiring"],
+    "text": "We're hiring! 🚀\n\nMy team at Copperline is looking for two backend engineers to help us rebuild our payments stack.\n\nWhat you'll do:\n• Own services that move £2bn a year\n• Work with Go, Postgres and Kafka\n• Ship to production on your first week\n\nWe offer a four-day week, a real learning budget, and the kindest code reviews in fintech.\n\nApply through the link in the comments or DM me directly. Please share with anyone you think would be a great fit!"
+  },
+  {
+    "id": "launch",
+    "author": "Ines Albrecht",
+    "expect": ["product_launch"],
+    "text": "After 18 months of building in stealth, today we're launching Ledgerly. 🎉\n\nLedgerly is bookkeeping for freelancers that does itself. Connect your bank, snap your receipts, and it files your quarterly tax estimate for you.\n\nWe started this because my co-founder spent a whole weekend of her honeymoon doing her own books. Never again.\n\nIt's live today, free for your first three months.\n\nIt would mean the world if you could like, comment or repost to help us reach more freelancers. ❤️"
+  },
+  {
+    "id": "fundraise",
+    "author": "Kofi Delacroix",
+    "expect": ["fundraising"],
+    "amount": "$14M",
+    "text": "Big news: Orbitdesk has raised a $14M Series A led by Fieldstone Ventures, with participation from our existing investors.\n\nTwo years ago we were three people in a spare bedroom. Today we're a team of 40, with $2M in annual revenue and customers in 18 countries.\n\nThis round lets us double down on what matters: building the best scheduling platform for field teams.\n\nThank you to our investors for believing in us, to our customers for trusting us, and to the team for everything. We're just getting started.\n\nAnd yes, we're hiring."
+  },
+  {
+    "id": "milestone",
+    "author": "Saoirse Lindqvist",
+    "expect": ["company_milestone"],
+    "text": "We just crossed 100,000 users at Pebblepath. 🥹\n\nThree years ago it was just me, a laptop and a waitlist of 11 people (8 of them were my family).\n\nI've been told no by 64 investors. I've done customer support at 3am. I've rewritten the onboarding flow nine times.\n\nToday, 100,000 people use something we built.\n\nIf you're building something and it feels impossible right now, keep going."
+  },
+  {
+    "id": "award",
+    "author": "Priyanka Mohandas",
+    "expect": ["award"],
+    "text": "Honoured and humbled to be named on this year's Northern Tech 30 Under 30 list. 🏆\n\nWhen I started coding in my university library at 2am, I never imagined I'd see my name alongside such incredible founders.\n\nThis isn't my award. It belongs to my team, my mentors, and my mum, who taught me that hard work always pays off.\n\nThank you to the judges for this recognition. More to come. 💪"
+  },
+  {
+    "id": "certification",
+    "author": "Garrett Nwosu",
+    "expect": ["certification"],
+    "text": "I'm pleased to share that I've completed the Advanced Negotiation programme at Westbrook Business School! 📜\n\nSix weeks, 40 hours of coursework and one very intense role-play where I negotiated a fictional steel contract.\n\nMy three biggest takeaways:\n1. Listen more than you talk\n2. Know your walk-away point\n3. Always ask one more question\n\nGrateful to my employer for supporting my development. Lifelong learning is the best investment you can make. 📚"
+  },
+  {
+    "id": "event",
+    "event": "SaaSConnect Lisbon",
+    "author": "Beatriz Holloway",
+    "expect": ["event_recap"],
+    "text": "What a week at SaaSConnect Lisbon! 🇵🇹\n\nThree days, 14 sessions, 200+ conversations and far too many pastéis de nata.\n\nMy key takeaways:\n→ AI is changing everything, but the fundamentals still matter\n→ Community is the new moat\n→ The best deals still happen over coffee\n\nThank you to everyone who stopped by our booth. If we met, let's stay in touch!\n\nSee you next year. ✈️"
+  },
+  {
+    "id": "speaking",
+    "author": "Lucien Adebayo",
+    "expect": ["speaking"],
+    "text": "Excited to share that I'll be speaking at DevHarbour Summit next month! 🎤\n\nMy talk, \"Your design system is a product, so act like it\", covers how we took ours from a Figma file nobody opened to something 30 teams actually use.\n\nI'll be sharing the mistakes too. There were many.\n\nIf you're going to be in Rotterdam on 14 November, come and say hello. Tickets are still available via the link in the comments."
+  },
+  {
+    "id": "advice-list",
+    "author": "Victor Amsel",
+    "expect": ["generic_advice"],
+    "text": "10 things I wish I'd known at 22:\n\n1. Your network is your net worth\n2. Nobody cares about your title\n3. Sleep is a competitive advantage\n4. Say no more often\n5. Read every day\n6. Your health is your wealth\n7. Done is better than perfect\n8. Invest early\n9. Be kind, always\n10. Bet on yourself\n\nWhich one resonates most with you? ♻️ Repost to help someone in your network."
+  },
+  {
+    "id": "advice-leadership",
+    "author": "Clara Duvernay",
+    "expect": ["generic_advice", "opinion"],
+    "text": "Leadership isn't about titles.\n\nIt's about showing up.\nIt's about listening.\nIt's about taking the blame and sharing the credit.\n\nThe best leader I ever had never once told me what to do. She asked questions until I figured it out myself.\n\nGreat leaders don't create followers. They create more leaders.\n\nAgree?"
+  },
+  {
+    "id": "parable-candidate",
+    "author": "Rafael Imbert",
+    "expect": ["parable"],
+    "text": "I interviewed a candidate yesterday who showed up 20 minutes late.\n\nMost hiring managers would have ended it there.\n\nBut I noticed her shoes were soaked. She'd walked three miles in the rain because her bus broke down.\n\nShe didn't mention it once. No excuses.\n\nI hired her on the spot.\n\nSkills can be taught. Grit can't.\n\nStop looking at CVs. Start looking at people."
+  },
+  {
+    "id": "parable-child",
+    "author": "Nadia Szabo",
+    "expect": ["parable"],
+    "text": "My 6-year-old taught me more about product management than my MBA did.\n\nYesterday she asked me why the dishwasher has so many buttons when we only ever use one.\n\nI didn't have an answer.\n\nHow many buttons does your product have that nobody uses?\n\nSometimes the best insights come from the most unexpected places. Listen to the children in your life. They see what we've stopped seeing."
+  },
+  {
+    "id": "opinion",
+    "author": "Hugo Ferreira-Lang",
+    "expect": ["opinion"],
+    "text": "Unpopular opinion: return-to-office mandates are about control, not collaboration.\n\nI've managed remote teams for eight years. The best work my teams ever did happened when nobody was watching the clock.\n\nIf you need people in a building to trust them, you don't have an office problem. You have a trust problem.\n\nChange my mind. 👇"
+  },
+  {
+    "id": "gratitude",
+    "author": "Mei-Lin Ashworth",
+    "expect": ["gratitude"],
+    "text": "Taking a moment today to say thank you. 🙏\n\nTo my team at Fernwood, who pulled together through the hardest quarter we've ever had. To my manager, who backed every one of my crazy ideas. To the people in other departments who answered my questions at 7pm.\n\nNone of us get anywhere alone.\n\nI'm so grateful to work with people who care this much. Tag someone you're grateful for today. 💛"
+  },
+  {
+    "id": "selling-course",
+    "author": "Bradley Voss",
+    "expect": ["selling"],
+    "text": "I've helped 300+ founders go from zero to their first $1M in pipeline.\n\nThe secret? It's not cold outreach. It's not ads. It's a system.\n\nFor the first time, I'm sharing the exact system in a 6-week live course: Pipeline Mastery.\n\n✔ 12 live sessions\n✔ My outbound templates\n✔ Lifetime community access\n\nDoors open Monday. The first 50 people get 40% off.\n\nLink in the comments. 👇"
+  },
+  {
+    "id": "engagement-guide",
+    "author": "Tiffany Okoro",
+    "expect": ["engagement_bait", "selling"],
+    "text": "I spent 200 hours building the ultimate LinkedIn growth playbook.\n\nIt's 47 pages covering:\n→ How I grew from 0 to 80k followers in 12 months\n→ 30 hook templates that go viral\n→ My exact posting schedule\n\nI'm giving it away for free.\n\nComment \"GUIDE\" below and I'll send it to you.\n\n(Must be connected so I can DM you)\n\n♻️ Repost to help your network grow too."
+  },
+  {
+    "id": "humblebrag-offer",
+    "author": "Dominic Achterberg",
+    "expect": ["humblebrag", "parable", "generic_advice"],
+    "text": "Last week I turned down a $400k offer from one of the biggest tech companies in the world.\n\nMy friends think I'm crazy.\n\nBut here's the thing about money: after a certain point, it stops mattering. What matters is freedom. Impact. Waking up excited.\n\nI'd rather build something of my own than be a cog in someone else's machine, no matter how shiny the machine.\n\nIt wasn't an easy decision. But I've never been more sure of anything."
+  },
+  {
+    "id": "humblebrag-viral",
+    "author": "Aoife Marchetti",
+    "expect": ["humblebrag"],
+    "text": "I woke up this morning to over 300 messages and 2 million impressions on my last post.\n\nI'm genuinely overwhelmed. 🥹\n\nWhen I started writing here a year ago, I got 12 likes (thanks, Mum).\n\nI'm not saying this to brag. I'm saying it because if you're posting into the void right now, keep going. Consistency beats talent.\n\nI'll do my best to reply to everyone!"
+  },
+  {
+    "id": "technical",
+    "author": "Yusuf Brandt",
+    "expect": ["keep"],
+    "text": "We cut our Postgres p99 latency on the events endpoint from 480ms to 35ms last week. Writing up what actually worked, because most of the advice we found didn't apply.\n\n1. The query planner was choosing a sequential scan because our statistics target was the default 100 on a column with 40k distinct tenant ids. Raising it to 1000 and running ANALYZE fixed the estimates.\n2. We replaced the index on (tenant_id) with a partial index on (tenant_id, created_at DESC) WHERE deleted_at IS NULL. Soft-deleted rows were 70% of the table.\n3. We moved the count(*) for pagination to an estimate from pg_class, since nobody needs an exact total on page 400.\n\nThe partial index alone took us from 480ms to 90ms. Happy to share the migration if it's useful."
+  },
+  {
+    "id": "regulation",
+    "author": "Ingrid Solberg",
+    "expect": ["keep"],
+    "text": "The EU Pay Transparency Directive has to be in national law by 7 June 2026. If you hire in the EU, these are the changes that affect you directly:\n\n• Job adverts or pre-interview information must include the starting salary or its range.\n• You can no longer ask candidates about their current or previous pay.\n• Employees can request the average pay for their category, broken down by sex, and you have two months to answer.\n• Employers with 100+ staff must report their gender pay gap. If any category shows a gap of 5% or more that you can't justify, you'll need a joint pay assessment with employee representatives.\n\nCheck how your own country is implementing it, since several are adding stricter rules."
+  },
+  {
+    "id": "question",
+    "author": "Frederik Mwangi",
+    "expect": ["keep"],
+    "text": "Question for people who have migrated a large Rails monolith to a modular setup.\n\nWe're at about 600k lines, 90 engineers, and our CI takes 45 minutes. We're deciding between Packwerk-style package boundaries inside the monolith and extracting two or three services around billing and notifications.\n\nIf you've done either, what did you underestimate? I'm especially interested in how you handled shared ActiveRecord models and database transactions that cross the boundaries you drew.\n\nSpecific war stories very welcome."
+  },
+  {
+    "id": "grief",
+    "author": "Colm Beaumont",
+    "expect": ["keep"],
+    "text": "Last month I lost my father.\n\nI haven't posted here since, and I wasn't sure I would. But I wanted to say something to anyone who is where I was a few weeks ago.\n\nI took two weeks off. I didn't reply to emails. My team covered for me without being asked, and my manager told me not to come back until I was ready.\n\nIf you're a manager, that's what it looks like. If you're grieving, it's okay to stop for a while.\n\nThank you to everyone who reached out."
+  },
+  {
+    "id": "burnout",
+    "author": "Esme Lindahl",
+    "expect": ["keep"],
+    "text": "Six months ago I was diagnosed with depression, brought on by two years of burnout I kept telling myself was just a busy season.\n\nI couldn't get out of bed some mornings. I stopped replying to friends. I kept working anyway, because that was the only part of my life that still felt under control.\n\nI'm doing better now, with therapy, medication and a lot of rest. I'm sharing this because I didn't see the signs, and maybe someone reading this will see theirs sooner than I did."
+  },
+  {
+    "id": "new-job-humblebrag",
+    "author": "Leon Aberforth",
+    "expect": ["new_job", "humblebrag"],
+    "org": "Vantor",
+    "mentions": ["Vantor"],
+    "text": "Never thought a kid from a small town with no degree would end up here.\n\nToday I'm joining Vantor as Chief Technology Officer.\n\nI was told I'd never make it in tech. I was rejected from 200 jobs. I taught myself to code on a library computer.\n\nAnd now I get to lead a team of 300 engineers.\n\nIf you're doubting yourself today, don't. Anything is possible.\n\nAgree? 👇"
+  }
+]

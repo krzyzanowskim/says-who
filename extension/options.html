@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Plain English settings</title>
+    <link rel="icon" href="icons/icon-32.png" />
+    <link rel="stylesheet" href="ui.css" />
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="head">
+        <h1><img src="icons/icon-128.png" alt="" />LinkedIn Plain English</h1>
+        <figure class="sample" aria-label="Example translation">
+          <p class="sample-by">Example post</p>
+          <p class="sample-was" aria-hidden="true">
+            <span id="sample-was"></span>
+            <svg viewBox="0 0 100 10" preserveAspectRatio="none">
+              <path d="M1,5.6 C30,4.4 62,5.9 99,4.7" pathLength="100" stroke-width="2.2" />
+              <path d="M1,6.1 C30,5.2 62,6.3 99,5.3" pathLength="100" stroke-width="1" opacity="0.45" />
+            </svg>
+          </p>
+          <p class="sample-says" id="sample-says"></p>
+          <p class="tally" id="sample-tally"></p>
+        </figure>
+      </header>
+
+      <section class="block" aria-labelledby="key-title">
+        <h2 id="key-title">TypeSafe API key</h2>
+        <p class="hint intro">
+          Jev, TypeSafe's classification model, decides what each post is saying. Get a key from
+          <a href="https://console.typesafe.ai" target="_blank" rel="noreferrer">console.typesafe.ai</a>.
+        </p>
+        <form id="key-form" class="key-row" autocomplete="off">
+          <label class="visually-hidden" for="key">API key</label>
+          <input id="key" name="key" type="password" spellcheck="false" placeholder="Paste your key" />
+          <button class="button" type="button" id="reveal" aria-pressed="false">Show</button>
+          <button class="button button-primary" type="submit" id="save">Save and test</button>
+        </form>
+        <p class="status" id="key-status" role="status"></p>
+      </section>
+
+      <section class="block" aria-labelledby="sure-title">
+        <h2 id="sure-title">How sure Jev has to be</h2>
+        <div class="range-row">
+          <input id="threshold" type="range" min="30" max="90" step="5" aria-describedby="threshold-hint" />
+          <output id="threshold-value" class="num" for="threshold"></output>
+        </div>
+        <p class="hint" id="threshold-hint">
+          Posts Jev is less sure about stay exactly as written. Higher means fewer translations and fewer mistakes.
+        </p>
+      </section>
+
+      <section class="block" aria-labelledby="short-title">
+        <h2 id="short-title">Shortest post to translate</h2>
+        <div class="range-row">
+          <input id="min-words" type="number" min="5" max="500" step="5" inputmode="numeric" aria-describedby="short-hint" />
+          <span>words</span>
+        </div>
+        <p class="hint" id="short-hint">Anything shorter is already plain enough and is never sent.</p>
+      </section>
+
+      <section class="block" aria-labelledby="feed-title">
+        <h2 id="feed-title">Feed</h2>
+        <label class="check">
+          <input id="auto-load" type="checkbox" />
+          <span>Press LinkedIn's "Load more" for me, so the feed keeps going as I scroll.</span>
+        </label>
+      </section>
+
+      <section class="block" aria-labelledby="data-title">
+        <h2 id="data-title">What leaves your browser</h2>
+        <p>
+          The text of each long post you scroll past goes to TypeSafe's API at api.typesafe.ai, with your key.
+          Nothing else goes with it: not the author's name, the images, the links, or anything about your LinkedIn
+          account. Your key is stored in this browser only and is never synced.
+        </p>
+      </section>
+
+      <section class="block" aria-labelledby="saved-title">
+        <h2 id="saved-title">Saved results</h2>
+        <p id="saved-line" class="num"></p>
+        <button class="button" type="button" id="forget">Forget saved results</button>
+      </section>
+    </main>
+    <script src="options.js" type="module"></script>
+  </body>
+</html>

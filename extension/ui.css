@@ -1,0 +1,221 @@
+/* Shared by the popup and the settings page. A manuscript under an editor's pencil:
+   plain paper, ink, graphite for secondary text, and one red pencil for the things
+   that act or cut. */
+
+/* Kalam, by the Indian Type Foundry, SIL Open Font License (fonts/OFL.txt). */
+@font-face {
+  font-family: 'LPE Kalam';
+  font-weight: 700;
+  font-display: swap;
+  src: url('fonts/kalam-700-latin.woff2') format('woff2');
+}
+
+:root {
+  --paper: #fdfdfb;
+  --hand: 'LPE Kalam', 'Segoe Print', 'Bradley Hand', cursive;
+  --ink: #1d1c1a;
+  --graphite: #5f5c57;
+  --rule: #e4e1dc;
+  --field: #ffffff;
+  --pencil: #b8321f;
+  --pencil-deep: #942616;
+  --on-pencil: #ffffff;
+  --good: #2f6b3a;
+  --serif: 'Iowan Old Style', 'Charter', 'Bitstream Charter', 'Sitka Text', Cambria, Georgia, serif;
+  --sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --paper: #1a1918;
+    --ink: #ecebe8;
+    --graphite: #a8a49d;
+    --rule: #35332f;
+    --field: #22211f;
+    --pencil: #f28b7d;
+    --pencil-deep: #f6a497;
+    --on-pencil: #1a1918;
+    --good: #8fc79a;
+    color-scheme: dark;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  text-underline-offset: 2px;
+}
+
+a:hover {
+  text-decoration-color: currentColor;
+}
+
+:focus-visible {
+  outline: 2px solid var(--pencil);
+  outline-offset: 2px;
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- buttons ---------- */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: var(--field);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 120ms ease-out, border-color 120ms ease-out;
+}
+
+.button:hover {
+  border-color: color-mix(in srgb, var(--ink) 35%, transparent);
+}
+
+.button:active {
+  transform: translateY(1px);
+}
+
+.button[disabled] {
+  opacity: 0.55;
+  cursor: default;
+  transform: none;
+}
+
+.button-primary {
+  border-color: var(--pencil);
+  background: var(--pencil);
+  color: var(--on-pencil);
+}
+
+.button-primary:hover {
+  border-color: var(--pencil-deep);
+  background: var(--pencil-deep);
+}
+
+/* ---------- switch ---------- */
+
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.switch input {
+  appearance: none;
+  position: relative;
+  width: 34px;
+  height: 20px;
+  margin: 0;
+  border-radius: 10px;
+  background: var(--rule);
+  cursor: pointer;
+  transition: background-color 160ms ease-out;
+}
+
+.switch input::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--paper);
+  box-shadow: 0 1px 1px rgb(0 0 0 / 0.15);
+  transition: transform 160ms ease-out;
+}
+
+.switch input:checked {
+  background: var(--pencil);
+}
+
+.switch input:checked::after {
+  transform: translateX(14px);
+}
+
+/* ---------- the translation sample ---------- */
+
+.sample-was {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  color: var(--graphite);
+}
+
+.sample-was span {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.sample-was svg {
+  position: absolute;
+  left: -2px;
+  top: calc(50% - 5px);
+  width: calc(100% + 4px);
+  height: 10px;
+  overflow: visible;
+}
+
+.sample-was path {
+  fill: none;
+  stroke: var(--pencil);
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.sample-says {
+  font-family: var(--hand);
+  font-weight: 700;
+  color: var(--pencil);
+  transform: rotate(-2deg);
+  transform-origin: 10% 50%;
+}
+
+.tally {
+  color: var(--pencil);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
