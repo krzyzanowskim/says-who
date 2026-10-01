@@ -22,7 +22,7 @@ It can be wrong. It only knows what a profile or post says, a bio can be out of 
 
 ## Install
 
-1. Take `says-who-v1.0.0.zip` from the [`release`](release) folder and unzip it.
+1. Download `says-who-v1.0.0.zip` from [Releases](https://github.com/krzyzanowskim/says-who/releases/latest) (it's also in the [`release`](release) folder) and unzip it.
 2. Open `chrome://extensions`, turn on **Developer mode**, click **Load unpacked** and choose the unzipped folder.
 3. Get an API key at [console.typesafe.ai](https://console.typesafe.ai). On the settings page that opens (or right-click the icon, **Options**), paste it and click **Save and test**.
 4. Reload any open X tabs.
