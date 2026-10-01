@@ -1,10 +1,10 @@
 /* Shared by the popup and the settings page. A manuscript under an editor's pencil:
    plain paper, ink, graphite for secondary text, and one red pencil for the things
-   that act or cut. */
+   that act or mark. */
 
 /* Kalam, by the Indian Type Foundry, SIL Open Font License (fonts/OFL.txt). */
 @font-face {
-  font-family: 'IOW Kalam';
+  font-family: 'SW Kalam';
   font-weight: 700;
   font-display: swap;
   src: url('fonts/kalam-700-latin.woff2') format('woff2');
@@ -12,7 +12,7 @@
 
 :root {
   --paper: #fdfdfb;
-  --hand: 'IOW Kalam', 'Segoe Print', 'Bradley Hand', cursive;
+  --hand: 'SW Kalam', 'Segoe Print', 'Bradley Hand', cursive;
   --ink: #1d1c1a;
   --graphite: #5f5c57;
   --rule: #e4e1dc;
@@ -167,36 +167,10 @@ a:hover {
   transform: translateX(14px);
 }
 
-/* ---------- the translation sample ---------- */
+/* ---------- the sample note ---------- */
 
 .sample-was {
-  position: relative;
-  display: inline-block;
-  max-width: 100%;
-  color: var(--graphite);
-}
-
-.sample-was span {
-  display: block;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.sample-was svg {
-  position: absolute;
-  left: -2px;
-  top: calc(50% - 5px);
-  width: calc(100% + 4px);
-  height: 10px;
-  overflow: visible;
-}
-
-.sample-was path {
-  fill: none;
-  stroke: var(--pencil);
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
+  color: var(--ink);
 }
 
 .sample-says {

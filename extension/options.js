@@ -1,22 +1,6 @@
-import { measure } from './lib/translate.js';
-
 const send = (message) => chrome.runtime.sendMessage(message);
 const fmt = (n) => n.toLocaleString('en-GB');
 const $ = (id) => document.getElementById(id);
-
-// An example card. The word counts are worked out the same way as on LinkedIn.
-const SAMPLE = {
-  post:
-    "I'm humbled and honoured to share some personal news. After four incredible years, countless late nights and more lessons than I can count, I've decided it's time for a new chapter. Starting Monday, I'll be joining Northwind as Head of Partnerships. None of this would have been possible without the mentors who believed in me when I didn't believe in myself. To my old team: you made me who I am. To my new team: let's build something special. Here's to growth, gratitude and the road ahead.",
-  says: 'I got a new job as Head of Partnerships at Northwind.',
-};
-
-function renderSample() {
-  const words = measure(SAMPLE.post, SAMPLE.says);
-  $('sample-was').textContent = SAMPLE.post;
-  $('sample-says').textContent = SAMPLE.says;
-  $('sample-tally').textContent = `${fmt(words.removed)} words cut, ${words.percent}% shorter`;
-}
 
 function setStatus(text, tone = 'quiet') {
   const node = $('key-status');
@@ -25,7 +9,7 @@ function setStatus(text, tone = 'quiet') {
 }
 
 function describeKey(status) {
-  if (!status.hasKey) return setStatus('No key saved yet. Posts show as written until you add one.', 'quiet');
+  if (!status.hasKey) return setStatus('No key saved yet. Nothing is checked until you add one.', 'quiet');
   if (status.keyState?.status === 401) return setStatus(`The key ending ${status.keyHint} was rejected by TypeSafe. Paste a new one.`, 'bad');
   setStatus(`A key ending ${status.keyHint} is saved.`, status.keyState?.ok ? 'good' : 'quiet');
 }
@@ -33,11 +17,9 @@ function describeKey(status) {
 function renderSettings(status) {
   $('threshold').value = Math.round(status.threshold * 100);
   $('threshold-value').textContent = `${Math.round(status.threshold * 100)}%`;
-  $('min-words').value = status.minWords;
-  $('auto-load').checked = status.autoLoad !== false;
-  const { posts, leftAlone } = status.stats;
+  const { flagged, cleared } = status.stats;
   $('saved-line').textContent = status.saved
-    ? `${fmt(status.saved)} ${status.saved === 1 ? 'post is' : 'posts are'} saved in this browser, so scrolling past them again is instant and free. So far ${fmt(posts)} translated and ${fmt(leftAlone)} left as written.`
+    ? `${fmt(status.saved)} ${status.saved === 1 ? 'result is' : 'results are'} saved in this browser, so scrolling past those posts again is instant and free. So far ${fmt(flagged)} marked and ${fmt(cleared)} left alone.`
     : 'Nothing saved yet. Each post is sent once, then its result is kept here.';
   $('forget').disabled = !status.saved;
 }
@@ -77,23 +59,12 @@ $('threshold').addEventListener('change', async () => {
   renderSettings(await send({ type: 'setSettings', patch: { threshold: Number($('threshold').value) / 100 } }));
 });
 
-$('min-words').addEventListener('change', async () => {
-  const value = Number($('min-words').value);
-  if (!Number.isFinite(value)) return;
-  renderSettings(await send({ type: 'setSettings', patch: { minWords: value } }));
-});
-
-$('auto-load').addEventListener('change', async () => {
-  renderSettings(await send({ type: 'setSettings', patch: { autoLoad: $('auto-load').checked } }));
-});
-
 $('forget').addEventListener('click', async () => {
   const status = await send({ type: 'status' });
   if (!confirm(`Forget ${fmt(status.saved)} saved results? Posts you scroll past again will be sent to TypeSafe again.`)) return;
   renderSettings(await send({ type: 'clearSaved' }));
 });
 
-renderSample();
 const status = await send({ type: 'status' });
 describeKey(status);
 renderSettings(status);

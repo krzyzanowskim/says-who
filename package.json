@@ -1,15 +1,17 @@
 {
-  "name": "in-other-words",
-  "version": "1.1.0",
+  "name": "says-who",
+  "version": "1.0.0",
   "private": true,
-  "description": "Chrome extension that collapses verbose LinkedIn posts into the plain sentence they're actually saying, using TypeSafe's Jev model.",
+  "description": "Chrome extension for X that marks posts about AI that come from people who build, sell or invest in AI, using TypeSafe's Jev model. A fork of In Other Words by Owen Greenhalgh.",
   "license": "MIT",
   "type": "module",
   "scripts": {
     "test": "node --test test/unit.test.mjs",
     "eval": "node scripts/eval.mjs",
     "e2e": "node test/e2e.mjs",
-    "build": "sh scripts/build.sh"
+    "live": "node test/live.mjs test/results sama",
+    "build": "sh scripts/build.sh",
+    "icons": "node scripts/icons.mjs"
   },
   "devDependencies": {
     "playwright-core": "^1.63.0"

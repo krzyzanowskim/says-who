@@ -1,0 +1,52 @@
+[
+  {
+    "handle": "sama",
+    "name": "Sam Altman",
+    "expect": "insider"
+  },
+  {
+    "handle": "karpathy",
+    "name": "Andrej Karpathy",
+    "expect": "insider"
+  },
+  {
+    "handle": "demishassabis",
+    "name": "Demis Hassabis",
+    "expect": "insider"
+  },
+  {
+    "handle": "AnthropicAI",
+    "name": "Anthropic",
+    "expect": "insider"
+  },
+  {
+    "handle": "BarackObama",
+    "name": "Barack Obama",
+    "expect": "not"
+  },
+  {
+    "handle": "MKBHD",
+    "name": "Marques Brownlee",
+    "expect": "not"
+  },
+  {
+    "handle": "emollick",
+    "name": "Ethan Mollick",
+    "expect": "not"
+  },
+  {
+    "handle": "johnsmith_ai",
+    "name": "John Smith",
+    "expect": "not"
+  },
+  {
+    "handle": "sarahchen",
+    "name": "Sarah Chen",
+    "expect": "not"
+  },
+  {
+    "handle": "novalabs_hq",
+    "name": "Nova Labs",
+    "expect": "not"
+  }
+]

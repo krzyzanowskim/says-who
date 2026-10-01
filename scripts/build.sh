@@ -1,12 +1,12 @@
 #!/bin/sh
-# Packs extension/ into release/in-other-words-v<version>.zip.
+# Packs extension/ into release/says-who-v<version>.zip.
 # The zip holds one folder, so unzipping it gives something you can point
 # Chrome's "Load unpacked" straight at.
 set -eu
 
 cd "$(dirname "$0")/.."
 version=$(node -p "require('./extension/manifest.json').version")
-name="in-other-words-v$version"
+name="says-who-v$version"
 stage=$(mktemp -d)
 trap 'rm -rf "$stage"' EXIT
 

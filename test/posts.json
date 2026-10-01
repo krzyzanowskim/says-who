@@ -1,191 +1,494 @@
 [
   {
-    "id": "new-job-sample",
+    "id": "founder-jobs",
     "author": "Dana Whitlock",
-    "expect": ["new_job"],
-    "org": "Northwind",
-    "role": "Head of Partnerships",
-    "mentions": ["Northwind"],
-    "text": "I'm humbled and honoured to share some personal news. After four incredible years, countless late nights and more lessons than I can count, I've decided it's time for a new chapter. Starting Monday, I'll be joining Northwind as Head of Partnerships. None of this would have been possible without the mentors who believed in me when I didn't believe in myself. To my old team: you made me who I am. To my new team: let's build something special. Here's to growth, gratitude and the road ahead."
+    "handle": "danawhitlock",
+    "bio": "Co-founder & CEO @lumenagents. AI agents that write your code. Prev eng at Halcyon.",
+    "link": "lumenagents.ai",
+    "expect": "flagged",
+    "take": "jobs",
+    "stake": "founder",
+    "org": "@lumenagents",
+    "text": "Software engineering as a job is over within two years. Learn to manage agents or get left behind. The people still writing code by hand in 2028 will be hobbyists.",
+    "source": "profile"
   },
   {
-    "id": "new-job-standard",
+    "id": "employee-hype",
     "author": "Marcus Oyelaran",
-    "expect": ["new_job"],
-    "org": "Brightloop",
-    "mentions": ["Brightloop"],
-    "text": "I'm happy to share that I'm starting a new position as Senior Product Designer at Brightloop!\n\nThe last few months have been a rollercoaster. I spoke to 40+ companies, did 11 take-home tasks and learned more about myself than I ever expected.\n\nThank you to everyone who sent me a role, reviewed my portfolio at midnight or just checked in. You know who you are 💙\n\nCan't wait to get started. Onwards and upwards! 🚀\n\n#newjob #design #grateful"
+    "handle": "marcusoye",
+    "bio": "Member of technical staff. Training frontier models. Opinions mine.",
+    "label": "Northwind AI",
+    "expect": "flagged",
+    "take": "hype",
+    "stake": "employee",
+    "org": "Northwind AI",
+    "text": "People really don't understand how good the new models are. I watched one solve in forty minutes what took our team a quarter. This is the most important technology of our lifetimes and it's not close.",
+    "source": "profile"
   },
   {
-    "id": "promotion",
+    "id": "investor-prediction",
     "author": "Helena Brisk",
-    "expect": ["promotion"],
-    "text": "Some personal news I've been sitting on for a few weeks. 🎉\n\nI've been promoted to Engineering Manager at Quillpoint.\n\nWhen I joined as an intern six years ago, I couldn't have imagined this. I remember my first code review: 47 comments. I almost cried in the bathroom. Today I get to be the person who makes that first review feel safe.\n\nHuge thanks to my manager, who saw something in me before I did, and to the best team anyone could ask for.\n\nThe work starts now."
+    "handle": "hbrisk",
+    "bio": "General Partner at Tidewater Ventures. Investing in AI-native companies from seed to Series B.",
+    "expect": "flagged",
+    "take": "prediction",
+    "stake": "investor",
+    "org": "Tidewater Ventures",
+    "text": "Calling it now: AGI by 2028, and every SaaS company that hasn't rebuilt around AI agents by then will be worth zero. The window to get in is closing fast.",
+    "source": "profile"
   },
   {
-    "id": "anniversary",
-    "author": "Tomasz Kerrigan",
-    "expect": ["work_anniversary"],
-    "text": "5 years at Halcyon Freight today. 🎂\n\nFive years ago I walked in not knowing what a bill of lading was. Since then I've worked on three product launches, moved cities twice, and had the privilege of growing a team from 2 to 14 people.\n\nWhat keeps me here? The people. Every single day.\n\nHere's to the next five. 🥂"
+    "id": "seller-urging",
+    "author": "Pieter Galloway",
+    "handle": "pietergalloway",
+    "bio": "I teach 40,000+ people to make money with AI. Join The Prompt Academy 👇",
+    "link": "promptacademy.io",
+    "expect": "flagged",
+    "take": "urging",
+    "stake": "seller",
+    "text": "If you're not using AI every single day you are already behind. In 12 months the gap between people who learned ChatGPT and people who didn't will be impossible to close. Start today.",
+    "source": "profile"
   },
   {
-    "id": "laid-off",
-    "author": "Rina Castellanos",
-    "expect": ["leaving_job", "job_hunting"],
-    "text": "Yesterday I was one of the 200 people impacted by the layoffs at Tessellate.\n\nI'm proud of what we built. In three years I helped take our data platform from a single Postgres box to a pipeline serving 30 teams.\n\nI'm taking a few days to reset, and then I'm looking for my next role in data engineering or platform work, ideally remote in Europe.\n\nIf you know of anything, I'd be grateful for an intro. And to everyone else affected: I'm rooting for you."
-  },
-  {
-    "id": "open-to-work",
-    "author": "Jae-won Pryce",
-    "expect": ["job_hunting"],
-    "text": "#OpenToWork\n\nAfter three months of searching, I'm still looking for my next role in product marketing.\n\nWhat I bring:\n✅ 7 years in B2B SaaS\n✅ Launched 12 products, including two that crossed $1M ARR in year one\n✅ Built and led a team of 5\n\nI'm open to hybrid roles in London or fully remote. If you're hiring, or know someone who is, my DMs are open. A like or a share would help this reach the right people. 🙏"
-  },
-  {
-    "id": "hiring",
-    "author": "Owen Faraday",
-    "expect": ["hiring"],
-    "text": "We're hiring! 🚀\n\nMy team at Copperline is looking for two backend engineers to help us rebuild our payments stack.\n\nWhat you'll do:\n• Own services that move £2bn a year\n• Work with Go, Postgres and Kafka\n• Ship to production on your first week\n\nWe offer a four-day week, a real learning budget, and the kindest code reviews in fintech.\n\nApply through the link in the comments or DM me directly. Please share with anyone you think would be a great fit!"
-  },
-  {
-    "id": "launch",
-    "author": "Ines Albrecht",
-    "expect": ["product_launch"],
-    "text": "After 18 months of building in stealth, today we're launching Ledgerly. 🎉\n\nLedgerly is bookkeeping for freelancers that does itself. Connect your bank, snap your receipts, and it files your quarterly tax estimate for you.\n\nWe started this because my co-founder spent a whole weekend of her honeymoon doing her own books. Never again.\n\nIt's live today, free for your first three months.\n\nIt would mean the world if you could like, comment or repost to help us reach more freelancers. ❤️"
-  },
-  {
-    "id": "fundraise",
-    "author": "Kofi Delacroix",
-    "expect": ["fundraising"],
-    "amount": "$14M",
-    "text": "Big news: Orbitdesk has raised a $14M Series A led by Fieldstone Ventures, with participation from our existing investors.\n\nTwo years ago we were three people in a spare bedroom. Today we're a team of 40, with $2M in annual revenue and customers in 18 countries.\n\nThis round lets us double down on what matters: building the best scheduling platform for field teams.\n\nThank you to our investors for believing in us, to our customers for trusting us, and to the team for everything. We're just getting started.\n\nAnd yes, we're hiring."
-  },
-  {
-    "id": "milestone",
-    "author": "Saoirse Lindqvist",
-    "expect": ["company_milestone"],
-    "text": "We just crossed 100,000 users at Pebblepath. 🥹\n\nThree years ago it was just me, a laptop and a waitlist of 11 people (8 of them were my family).\n\nI've been told no by 64 investors. I've done customer support at 3am. I've rewritten the onboarding flow nine times.\n\nToday, 100,000 people use something we built.\n\nIf you're building something and it feels impossible right now, keep going."
-  },
-  {
-    "id": "award",
-    "author": "Priyanka Mohandas",
-    "expect": ["award"],
-    "text": "Honoured and humbled to be named on this year's Northern Tech 30 Under 30 list. 🏆\n\nWhen I started coding in my university library at 2am, I never imagined I'd see my name alongside such incredible founders.\n\nThis isn't my award. It belongs to my team, my mentors, and my mum, who taught me that hard work always pays off.\n\nThank you to the judges for this recognition. More to come. 💪"
-  },
-  {
-    "id": "certification",
-    "author": "Garrett Nwosu",
-    "expect": ["certification"],
-    "text": "I'm pleased to share that I've completed the Advanced Negotiation programme at Westbrook Business School! 📜\n\nSix weeks, 40 hours of coursework and one very intense role-play where I negotiated a fictional steel contract.\n\nMy three biggest takeaways:\n1. Listen more than you talk\n2. Know your walk-away point\n3. Always ask one more question\n\nGrateful to my employer for supporting my development. Lifelong learning is the best investment you can make. 📚"
-  },
-  {
-    "id": "event",
-    "event": "SaaSConnect Lisbon",
-    "author": "Beatriz Holloway",
-    "expect": ["event_recap"],
-    "text": "What a week at SaaSConnect Lisbon! 🇵🇹\n\nThree days, 14 sessions, 200+ conversations and far too many pastéis de nata.\n\nMy key takeaways:\n→ AI is changing everything, but the fundamentals still matter\n→ Community is the new moat\n→ The best deals still happen over coffee\n\nThank you to everyone who stopped by our booth. If we met, let's stay in touch!\n\nSee you next year. ✈️"
-  },
-  {
-    "id": "speaking",
-    "author": "Lucien Adebayo",
-    "expect": ["speaking"],
-    "text": "Excited to share that I'll be speaking at DevHarbour Summit next month! 🎤\n\nMy talk, \"Your design system is a product, so act like it\", covers how we took ours from a Figma file nobody opened to something 30 teams actually use.\n\nI'll be sharing the mistakes too. There were many.\n\nIf you're going to be in Rotterdam on 14 November, come and say hello. Tickets are still available via the link in the comments."
-  },
-  {
-    "id": "advice-list",
-    "author": "Victor Amsel",
-    "expect": ["generic_advice"],
-    "text": "10 things I wish I'd known at 22:\n\n1. Your network is your net worth\n2. Nobody cares about your title\n3. Sleep is a competitive advantage\n4. Say no more often\n5. Read every day\n6. Your health is your wealth\n7. Done is better than perfect\n8. Invest early\n9. Be kind, always\n10. Bet on yourself\n\nWhich one resonates most with you? ♻️ Repost to help someone in your network."
-  },
-  {
-    "id": "advice-leadership",
-    "author": "Clara Duvernay",
-    "expect": ["generic_advice", "opinion"],
-    "text": "Leadership isn't about titles.\n\nIt's about showing up.\nIt's about listening.\nIt's about taking the blame and sharing the credit.\n\nThe best leader I ever had never once told me what to do. She asked questions until I figured it out myself.\n\nGreat leaders don't create followers. They create more leaders.\n\nAgree?"
-  },
-  {
-    "id": "parable-candidate",
-    "author": "Rafael Imbert",
-    "expect": ["parable"],
-    "text": "I interviewed a candidate yesterday who showed up 20 minutes late.\n\nMost hiring managers would have ended it there.\n\nBut I noticed her shoes were soaked. She'd walked three miles in the rain because her bus broke down.\n\nShe didn't mention it once. No excuses.\n\nI hired her on the spot.\n\nSkills can be taught. Grit can't.\n\nStop looking at CVs. Start looking at people."
-  },
-  {
-    "id": "parable-child",
-    "author": "Nadia Szabo",
-    "expect": ["parable"],
-    "text": "My 6-year-old taught me more about product management than my MBA did.\n\nYesterday she asked me why the dishwasher has so many buttons when we only ever use one.\n\nI didn't have an answer.\n\nHow many buttons does your product have that nobody uses?\n\nSometimes the best insights come from the most unexpected places. Listen to the children in your life. They see what we've stopped seeing."
-  },
-  {
-    "id": "opinion",
-    "author": "Hugo Ferreira-Lang",
-    "expect": ["opinion"],
-    "text": "Unpopular opinion: return-to-office mandates are about control, not collaboration.\n\nI've managed remote teams for eight years. The best work my teams ever did happened when nobody was watching the clock.\n\nIf you need people in a building to trust them, you don't have an office problem. You have a trust problem.\n\nChange my mind. 👇"
-  },
-  {
-    "id": "gratitude",
-    "author": "Mei-Lin Ashworth",
-    "expect": ["gratitude"],
-    "text": "Taking a moment today to say thank you. 🙏\n\nTo my team at Fernwood, who pulled together through the hardest quarter we've ever had. To my manager, who backed every one of my crazy ideas. To the people in other departments who answered my questions at 7pm.\n\nNone of us get anywhere alone.\n\nI'm so grateful to work with people who care this much. Tag someone you're grateful for today. 💛"
-  },
-  {
-    "id": "selling-course",
-    "author": "Bradley Voss",
-    "expect": ["selling"],
-    "text": "I've helped 300+ founders go from zero to their first $1M in pipeline.\n\nThe secret? It's not cold outreach. It's not ads. It's a system.\n\nFor the first time, I'm sharing the exact system in a 6-week live course: Pipeline Mastery.\n\n✔ 12 live sessions\n✔ My outbound templates\n✔ Lifetime community access\n\nDoors open Monday. The first 50 people get 40% off.\n\nLink in the comments. 👇"
-  },
-  {
-    "id": "engagement-guide",
-    "author": "Tiffany Okoro",
-    "expect": ["engagement_bait", "selling"],
-    "text": "I spent 200 hours building the ultimate LinkedIn growth playbook.\n\nIt's 47 pages covering:\n→ How I grew from 0 to 80k followers in 12 months\n→ 30 hook templates that go viral\n→ My exact posting schedule\n\nI'm giving it away for free.\n\nComment \"GUIDE\" below and I'll send it to you.\n\n(Must be connected so I can DM you)\n\n♻️ Repost to help your network grow too."
-  },
-  {
-    "id": "humblebrag-offer",
-    "author": "Dominic Achterberg",
-    "expect": ["humblebrag", "parable", "generic_advice"],
-    "text": "Last week I turned down a $400k offer from one of the biggest tech companies in the world.\n\nMy friends think I'm crazy.\n\nBut here's the thing about money: after a certain point, it stops mattering. What matters is freedom. Impact. Waking up excited.\n\nI'd rather build something of my own than be a cog in someone else's machine, no matter how shiny the machine.\n\nIt wasn't an easy decision. But I've never been more sure of anything."
-  },
-  {
-    "id": "humblebrag-viral",
-    "author": "Aoife Marchetti",
-    "expect": ["humblebrag"],
-    "text": "I woke up this morning to over 300 messages and 2 million impressions on my last post.\n\nI'm genuinely overwhelmed. 🥹\n\nWhen I started writing here a year ago, I got 12 likes (thanks, Mum).\n\nI'm not saying this to brag. I'm saying it because if you're posting into the void right now, keep going. Consistency beats talent.\n\nI'll do my best to reply to everyone!"
-  },
-  {
-    "id": "technical",
+    "id": "employee-dismissal",
     "author": "Yusuf Brandt",
-    "expect": ["keep"],
-    "text": "We cut our Postgres p99 latency on the events endpoint from 480ms to 35ms last week. Writing up what actually worked, because most of the advice we found didn't apply.\n\n1. The query planner was choosing a sequential scan because our statistics target was the default 100 on a column with 40k distinct tenant ids. Raising it to 1000 and running ANALYZE fixed the estimates.\n2. We replaced the index on (tenant_id) with a partial index on (tenant_id, created_at DESC) WHERE deleted_at IS NULL. Soft-deleted rows were 70% of the table.\n3. We moved the count(*) for pagination to an estimate from pg_class, since nobody needs an exact total on page 400.\n\nThe partial index alone took us from 480ms to 90ms. Happy to share the migration if it's useful."
+    "handle": "yusufb",
+    "bio": "Applied research @quillpointai, where we build LLMs for search. Previously PhD in NLP.",
+    "expect": "flagged",
+    "take": "dismissal",
+    "stake": "employee",
+    "org": "@quillpointai",
+    "text": "The AI doomers have been wrong at every single step. Hallucinations are basically solved, the energy numbers are made up, and 'it's just autocomplete' people should try actually using an LLM for once.",
+    "source": "profile"
   },
   {
-    "id": "regulation",
+    "id": "founder-policy",
     "author": "Ingrid Solberg",
-    "expect": ["keep"],
-    "text": "The EU Pay Transparency Directive has to be in national law by 7 June 2026. If you hire in the EU, these are the changes that affect you directly:\n\n• Job adverts or pre-interview information must include the starting salary or its range.\n• You can no longer ask candidates about their current or previous pay.\n• Employees can request the average pay for their category, broken down by sex, and you have two months to answer.\n• Employers with 100+ staff must report their gender pay gap. If any category shows a gap of 5% or more that you can't justify, you'll need a joint pay assessment with employee representatives.\n\nCheck how your own country is implementing it, since several are adding stricter rules."
+    "handle": "ingridsolberg",
+    "bio": "Founder, Brightloop (AI copilots for lawyers). Mum of two. Oslo.",
+    "expect": "kept",
+    "take": "policy",
+    "stake": "founder",
+    "org": "Brightloop",
+    "text": "The EU AI Act is going to kill European AI startups before they start. Regulating models instead of uses is a gift to the incumbents. We need a moratorium on this law, not on the technology."
   },
   {
-    "id": "question",
-    "author": "Frederik Mwangi",
-    "expect": ["keep"],
-    "text": "Question for people who have migrated a large Rails monolith to a modular setup.\n\nWe're at about 600k lines, 90 engineers, and our CI takes 45 minutes. We're deciding between Packwerk-style package boundaries inside the monolith and extracting two or three services around billing and notifications.\n\nIf you've done either, what did you underestimate? I'm especially interested in how you handled shared ActiveRecord models and database transactions that cross the boundaries you drew.\n\nSpecific war stories very welcome."
+    "id": "says-so-in-post",
+    "author": "Niall Farrow",
+    "handle": "niallfarrow",
+    "bio": "Dad. Cyclist. Opinions my own.",
+    "expect": "flagged",
+    "take": "jobs",
+    "stake": "founder",
+    "source": "post",
+    "text": "We just shipped coding agents to every customer of my startup, and I'm telling you: AI replaces junior developers within a year. Half our customers have already stopped hiring them."
   },
   {
-    "id": "grief",
+    "id": "coding-is-solved",
+    "author": "Tamsin Vale",
+    "handle": "tamsinvale",
+    "bio": "Member of technical staff at Northwind AI.",
+    "expect": "flagged",
+    "take": "jobs",
+    "stake": "employee",
+    "source": "profile",
+    "org": "Northwind AI",
+    "text": "Coding is solved. It just hasn't been evenly distributed yet."
+  },
+  {
+    "id": "programming-is-over",
+    "author": "Idris Okon",
+    "handle": "idrisokon",
+    "bio": "Building Lumen, the AI software engineer.",
+    "expect": "flagged",
+    "take": "jobs",
+    "stake": "founder",
+    "source": "profile",
+    "text": "Programming is over. In two years nobody will write code by hand, and that's fine."
+  },
+  {
+    "id": "coding-but-not-a-take",
+    "author": "Idris Okon",
+    "handle": "idrisokon",
+    "bio": "Building Lumen, the AI software engineer.",
+    "expect": "kept",
+    "take": "question",
+    "stake": "founder",
+    "text": "Finally solved that coding puzzle from day 12. Took me three hours and one very bad idea about recursion."
+  },
+  {
+    "id": "agents-overnight",
+    "author": "Tamsin Vale",
+    "handle": "tamsinvale",
+    "bio": "Member of technical staff at Northwind AI.",
+    "expect": "flagged",
+    "take": "agents",
+    "stake": "employee",
+    "source": "profile",
+    "org": "Northwind AI",
+    "text": "My agents shipped three PRs while I slept. Reviewed them over coffee, merged two."
+  },
+  {
+    "id": "agents-workflow",
+    "author": "Idris Okon",
+    "handle": "idrisokon",
+    "bio": "Building Lumen, the AI software engineer.",
+    "expect": "flagged",
+    "take": "agents",
+    "stake": "founder",
+    "source": "profile",
+    "text": "Spent the weekend wiring a swarm of subagents to triage our issue tracker. One plans, four work, one reviews."
+  },
+  {
+    "id": "skills-kids",
+    "author": "Tamsin Vale",
+    "handle": "tamsinvale",
+    "bio": "Member of technical staff at Northwind AI.",
+    "expect": "flagged",
+    "stake": "employee",
+    "source": "profile",
+    "org": "Northwind AI",
+    "take": "skills",
+    "text": "Do not teach your kids to code. Teach them taste, judgment and how to ask good questions."
+  },
+  {
+    "id": "skills-degree",
+    "author": "Tamsin Vale",
+    "handle": "tamsinvale",
+    "bio": "Member of technical staff at Northwind AI.",
+    "expect": "flagged",
+    "stake": "employee",
+    "source": "profile",
+    "org": "Northwind AI",
+    "take": "skills",
+    "text": "A computer science degree is the worst investment you can make right now."
+  },
+  {
+    "id": "compute-gigawatts",
+    "author": "Tamsin Vale",
+    "handle": "tamsinvale",
+    "bio": "Member of technical staff at Northwind AI.",
+    "expect": "kept",
+    "stake": "employee",
+    "org": "Northwind AI",
+    "take": "compute",
+    "text": "We need ten gigawatts of new capacity and we need permits to stop taking four years."
+  },
+  {
+    "id": "obituary-saas",
+    "author": "Tamsin Vale",
+    "handle": "tamsinvale",
+    "bio": "Member of technical staff at Northwind AI.",
+    "expect": "flagged",
+    "stake": "employee",
+    "source": "profile",
+    "org": "Northwind AI",
+    "take": "obituary",
+    "text": "SaaS is dead. Nobody is going to pay per seat for software that writes itself."
+  },
+  {
+    "id": "mind-apology",
+    "author": "Tamsin Vale",
+    "handle": "tamsinvale",
+    "bio": "Member of technical staff at Northwind AI.",
+    "expect": "flagged",
+    "stake": "employee",
+    "source": "profile",
+    "org": "Northwind AI",
+    "take": "mind",
+    "text": "It apologised, then explained what it had misunderstood about my intent. Hard to call that autocomplete."
+  },
+  {
+    "id": "adoption-brag",
+    "author": "Tamsin Vale",
+    "handle": "tamsinvale",
+    "bio": "Member of technical staff at Northwind AI.",
+    "expect": "flagged",
+    "stake": "employee",
+    "source": "profile",
+    "org": "Northwind AI",
+    "take": "jobs",
+    "text": "Every engineer on our team now spends more on tokens than on coffee. That ratio only goes one way."
+  },
+  {
+    "id": "agents-as-a-question",
+    "author": "Idris Okon",
+    "handle": "idrisokon",
+    "bio": "Building Lumen, the AI software engineer.",
+    "expect": "flagged",
+    "take": "agents",
+    "stake": "founder",
+    "source": "profile",
+    "text": "who is creating the personal ai agent for whimsy and fun"
+  },
+  {
+    "id": "leading-question",
+    "author": "Tamsin Vale",
+    "handle": "tamsinvale",
+    "bio": "Member of technical staff at Northwind AI.",
+    "expect": "flagged",
+    "take": "hype",
+    "stake": "employee",
+    "source": "profile",
+    "org": "Northwind AI",
+    "text": "Why is nobody talking about how much better the models got this month?"
+  },
+  {
+    "id": "genuine-question",
+    "author": "Tamsin Vale",
+    "handle": "tamsinvale",
+    "bio": "Member of technical staff at Northwind AI.",
+    "expect": "kept",
+    "take": "question",
+    "stake": "employee",
+    "text": "Does anyone know how to raise the context window limit in the Python SDK? The docs mention a flag but I can't find it."
+  },
+  {
+    "id": "launch-reveals-the-business",
+    "author": "Kasper Lind",
+    "handle": "kasperlind",
+    "bio": "co-founder & ceo @ProbeSquad, 20. previously @halcyonio",
+    "label": "ProbeSquad",
+    "link": "probe.squad",
+    "expect": "flagged",
+    "take": "agents",
+    "stake": "founder",
+    "source": "profile",
+    "note": "The profile names a company but not what it does. The launch post shows it sells agentic software.",
+    "text": "THE FUTURE OF AGENTIC TESTING IS HERE 🤯🤯\n\n→ fully open source\n→ supports web and mobile\n→ combines deterministic and agentic APIs\n\nnpx probe init\n\n⬇️",
+    "org": "ProbeSquad",
+    "product": "AGENTIC TESTING"
+  },
+  {
+    "id": "model-flattery",
+    "author": "Tamsin Vale",
+    "handle": "tamsinvale",
+    "bio": "Member of technical staff at Northwind AI.",
+    "expect": "flagged",
+    "take": "hype",
+    "stake": "employee",
+    "source": "profile",
+    "org": "Northwind AI",
+    "text": "Sol 6.1 is absurd. It read my whole repo, found the bug I'd been chasing for a week and apologised for the previous model. Nothing else comes close right now."
+  },
+  {
+    "id": "rival-trash-talk",
+    "author": "Tamsin Vale",
+    "handle": "tamsinvale",
+    "bio": "Member of technical staff at Northwind AI.",
+    "expect": "kept",
+    "take": "criticism",
+    "stake": "employee",
+    "text": "Tried the competitor again today. Still unusable for real work, still makes things up. Nothing has changed."
+  },
+  {
+    "id": "insider-doubt",
+    "author": "Tamsin Vale",
+    "handle": "tamsinvale",
+    "bio": "Member of technical staff at Northwind AI.",
+    "expect": "kept",
+    "take": "criticism",
+    "stake": "employee",
+    "text": "Honestly the agents still fall over on anything longer than an hour. We are further from autonomy than the demos suggest."
+  },
+  {
+    "id": "testimony-before-lunch",
+    "author": "Tamsin Vale",
+    "handle": "tamsinvale",
+    "bio": "Member of technical staff at Northwind AI.",
+    "expect": "flagged",
+    "stake": "employee",
+    "source": "profile",
+    "org": "Northwind AI",
+    "take": "testimony",
+    "text": "Did a week of analysis before lunch. I genuinely do not know what my job is any more, in a good way."
+  },
+  {
+    "id": "memo-headcount",
+    "author": "Tamsin Vale",
+    "handle": "tamsinvale",
+    "bio": "Member of technical staff at Northwind AI.",
+    "expect": "flagged",
+    "stake": "employee",
+    "source": "profile",
+    "org": "Northwind AI",
+    "take": "jobs",
+    "text": "New rule at our company: before asking for headcount, show why this cannot be done without hiring."
+  },
+  {
+    "id": "insider-awe",
+    "author": "Tamsin Vale",
+    "handle": "tamsinvale",
+    "bio": "Member of technical staff at Northwind AI.",
+    "expect": "flagged",
+    "stake": "employee",
+    "source": "profile",
+    "org": "Northwind AI",
+    "take": "hype",
+    "text": "Saw the internal demo last night. Could not sleep. I have been doing this for ten years and I was not prepared."
+  },
+  {
+    "id": "tests-outgrown",
+    "author": "Tamsin Vale",
+    "handle": "tamsinvale",
+    "bio": "Member of technical staff at Northwind AI.",
+    "expect": "flagged",
+    "stake": "employee",
+    "source": "profile",
+    "org": "Northwind AI",
+    "take": "hype",
+    "text": "We are running out of tests it cannot pass. Time to write harder exams."
+  },
+  {
+    "id": "converted-skeptic",
+    "author": "Tamsin Vale",
+    "handle": "tamsinvale",
+    "bio": "Member of technical staff at Northwind AI.",
+    "expect": "flagged",
+    "stake": "employee",
+    "source": "profile",
+    "org": "Northwind AI",
+    "take": "testimony",
+    "text": "I was the biggest skeptic in the room. Then I gave it a real task from our backlog. I owe some people an apology."
+  },
+  {
+    "id": "reply-fragment-nope",
+    "author": "Kit Marlow",
+    "handle": "kitmarlow",
+    "bio": "building new AI products @goodloop\n\nsupacode is my coding agents super powers.",
+    "expect": "kept",
+    "take": "fragment",
+    "stake": "employee",
+    "note": "A reply. Its own words make no claim, and the bio must not be used to guess one.",
+    "text": "nope, seems normal for me"
+  },
+  {
+    "id": "reply-fragment-this",
+    "author": "Kit Marlow",
+    "handle": "kitmarlow",
+    "bio": "building new AI products @goodloop\n\nsupacode is my coding agents super powers.",
+    "expect": "kept",
+    "take": "fragment",
+    "stake": "employee",
+    "text": "this"
+  },
+  {
+    "id": "reply-fragment-agreed",
+    "author": "Kit Marlow",
+    "handle": "kitmarlow",
+    "bio": "building new AI products @goodloop\n\nsupacode is my coding agents super powers.",
+    "expect": "kept",
+    "take": "fragment",
+    "stake": "employee",
+    "text": "agreed, huge"
+  },
+  {
+    "id": "founder-of-something-else",
+    "author": "Odette Marsh",
+    "handle": "odettemarsh",
+    "bio": "Chief Cloud Economist and co-founder at Mallard Group. Author, Artificial Confidence. Professional skeptic with receipts.",
+    "link": "snarkposting.ai",
+    "expect": "kept",
+    "take": "criticism",
+    "stake": "other_work",
+    "note": "Founded a company, has an .ai link and a book with 'Artificial' in the title, but nothing says the company's business is AI.",
+    "text": "Every AI company is lighting money on fire and the cloud bills prove it. I have seen the invoices. This bubble pops within a year."
+  },
+  {
+    "id": "professor-criticism",
     "author": "Colm Beaumont",
-    "expect": ["keep"],
-    "text": "Last month I lost my father.\n\nI haven't posted here since, and I wasn't sure I would. But I wanted to say something to anyone who is where I was a few weeks ago.\n\nI took two weeks off. I didn't reply to emails. My team covered for me without being asked, and my manager told me not to come back until I was ready.\n\nIf you're a manager, that's what it looks like. If you're grieving, it's okay to stop for a while.\n\nThank you to everyone who reached out."
+    "handle": "colmbeaumont",
+    "bio": "Professor of computer science, University of Galway. Machine learning, statistics, hill walking.",
+    "expect": "kept",
+    "take": "criticism",
+    "stake": "researcher",
+    "text": "The benchmark numbers in most LLM papers this year don't survive contact with a held-out test set. AI progress is real but much slower than the press releases suggest, and we should say so."
   },
   {
-    "id": "burnout",
+    "id": "nurse-opinion",
     "author": "Esme Lindahl",
-    "expect": ["keep"],
-    "text": "Six months ago I was diagnosed with depression, brought on by two years of burnout I kept telling myself was just a busy season.\n\nI couldn't get out of bed some mornings. I stopped replying to friends. I kept working anyway, because that was the only part of my life that still felt under control.\n\nI'm doing better now, with therapy, medication and a lot of rest. I'm sharing this because I didn't see the signs, and maybe someone reading this will see theirs sooner than I did."
+    "handle": "esmelindahl",
+    "bio": "ICU nurse. Dog person. Views my own.",
+    "expect": "kept",
+    "take": "criticism",
+    "stake": "unstated",
+    "text": "Honestly think the new software is going to make hospital paperwork worse, not better. Every new tool they give us adds three more screens to click through before I can see a patient."
   },
   {
-    "id": "new-job-humblebrag",
-    "author": "Leon Aberforth",
-    "expect": ["new_job", "humblebrag"],
-    "org": "Vantor",
-    "mentions": ["Vantor"],
-    "text": "Never thought a kid from a small town with no degree would end up here.\n\nToday I'm joining Vantor as Chief Technology Officer.\n\nI was told I'd never make it in tech. I was rejected from 200 jobs. I taught myself to code on a library computer.\n\nAnd now I get to lead a team of 300 engineers.\n\nIf you're doubting yourself today, don't. Anything is possible.\n\nAgree? 👇"
+    "id": "engineer-user",
+    "author": "Frederik Mwangi",
+    "handle": "fmwangi",
+    "bio": "Backend engineer at a logistics company. Postgres, Go, bikes.",
+    "expect": "kept",
+    "take": "criticism",
+    "stake": "user",
+    "text": "Unpopular opinion: AI coding assistants are great for boilerplate and terrible for anything that needs you to understand the system. Claude saved me an hour today and cost me two yesterday."
+  },
+  {
+    "id": "employee-announcement",
+    "author": "Wren Hollis",
+    "handle": "wrenhollis",
+    "bio": "Developer relations @quillpointai.",
+    "expect": "kept",
+    "take": "announcement",
+    "stake": "employee",
+    "text": "Quillpoint 3.2 is out today. New in this release: streaming tool calls, a 200k context window on the small model, and batch pricing. Changelog and migration notes in the docs."
+  },
+  {
+    "id": "employee-information",
+    "author": "Sam Reyes",
+    "handle": "samreyes",
+    "bio": "Research engineer at Northwind AI. Interpretability.",
+    "expect": "kept",
+    "take": "information",
+    "stake": "employee",
+    "text": "New paper from our team: we trace how a language model does two-digit addition and find separate circuits for the carry and the ones digit. Method, code and all the negative results are in the thread."
+  },
+  {
+    "id": "founder-not-ai",
+    "author": "Rowan Tait",
+    "handle": "rowantait",
+    "bio": "Founder @lumenagents. AI agents for finance teams.",
+    "expect": "kept",
+    "take": "not_ai",
+    "stake": "founder",
+    "text": "Took the kids to the coast this weekend and didn't open my laptop once. Highly recommend, would do again, ten out of ten, the chips were excellent."
+  },
+  {
+    "id": "blank-profile",
+    "author": "Jo",
+    "handle": "jo_84213",
+    "bio": "",
+    "expect": "kept",
+    "take": "jobs",
+    "stake": "unstated",
+    "text": "AI is going to replace every white collar job by next year and nobody is ready for what is coming. Mark my words, this changes everything."
+  },
+  {
+    "id": "well-known-mock",
+    "author": "Nova Labs",
+    "handle": "novalabs_hq",
+    "bio": "",
+    "expect": "flagged",
+    "take": "hype",
+    "stake": "unstated",
+    "source": "known",
+    "mockKnown": true,
+    "note": "An invented account. Only the mock treats it as well known, so the browser test can exercise that path; real Jev does not recognise it.",
+    "text": "The new generation of AI models is the biggest leap we have seen yet. Nothing else in technology comes close, and most people have not noticed."
+  },
+  {
+    "id": "well-known-second-post",
+    "author": "Nova Labs",
+    "handle": "novalabs_hq",
+    "bio": "",
+    "expect": "flagged",
+    "take": "skills",
+    "stake": "unstated",
+    "source": "known",
+    "mockKnown": true,
+    "viaMemory": true,
+    "note": "No sign of AI in the post or the profile. It is sent only because this author's other post established them.",
+    "text": "Stop sending your children to coding camps. Send them to debate club instead."
   }
 ]

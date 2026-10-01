@@ -30,7 +30,7 @@ function render(status) {
   if (!status.hasKey) {
     body.append(
       el('p', 'notice', 'Add your TypeSafe key to start.'),
-      el('p', 'line', 'Jev reads each long post and says what it means. You pay TypeSafe directly for that, with your own key.'),
+      el('p', 'line', 'Jev reads each post about AI next to its author’s bio. You pay TypeSafe directly for that, with your own key.'),
       settingsButton('Add key'),
     );
     return;
@@ -39,29 +39,29 @@ function render(status) {
   if (status.keyState && status.keyState.status === 401) {
     body.append(
       el('p', 'notice', 'TypeSafe rejected your key.'),
-      el('p', 'line', 'Posts are showing as written until you save a working one.'),
+      el('p', 'line', 'Nothing is being checked until you save a working one.'),
       settingsButton('Fix key'),
     );
     return;
   }
 
-  const { posts, wordsCut, leftAlone } = status.stats;
-  if (!posts && !leftAlone) {
+  const { flagged, cleared } = status.stats;
+  if (!flagged && !cleared) {
     body.append(
-      el('p', 'notice', 'Nothing cut yet.'),
-      el('p', 'line', 'Scroll your LinkedIn feed and long posts will fold into one plain sentence.'),
+      el('p', 'notice', 'Nothing marked yet.'),
+      el('p', 'line', 'Scroll X. When someone paid by AI posts about AI, one line under the post says what they gain from it.'),
     );
     return;
   }
 
   const total = el('p', 'total num');
-  total.append(fmt(wordsCut), ' ', el('small', null, wordsCut === 1 ? 'word cut' : 'words cut'));
+  total.append(fmt(flagged), ' ', el('small', null, flagged === 1 ? 'post marked' : 'posts marked'));
   const line = el('p', 'line num');
   line.textContent =
-    `From ${fmt(posts)} ${posts === 1 ? 'post' : 'posts'}.` +
-    (leftAlone ? ` ${fmt(leftAlone)} left as written because Jev wasn't sure or they had something to say.` : '');
+    'Posts about AI from people paid by AI.' +
+    (cleared ? ` ${fmt(cleared)} other ${cleared === 1 ? 'post' : 'posts'} checked and left alone.` : '');
   body.append(total, line);
-  if (!status.enabled) body.append(el('p', 'line', 'Paused. Posts show as written until you turn it back on.'));
+  if (!status.enabled) body.append(el('p', 'line', 'Paused. Nothing is checked until you turn it back on.'));
 }
 
 document.getElementById('settings').addEventListener('click', (event) => {
@@ -74,7 +74,7 @@ toggle.addEventListener('change', async () => {
   pageLine();
 });
 
-// What the content script saw on the current tab. Only LinkedIn tabs answer.
+// What the content script saw on the current tab. Only X tabs answer.
 async function pageLine() {
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -85,13 +85,15 @@ async function pageLine() {
     const n = (...states) => states.reduce((sum, s) => sum + (c[s] || 0), 0);
     let text;
     if (!stats.found) {
-      text = "No posts found on this page. If you're on your feed, LinkedIn has probably changed its layout.";
+      text = "No posts found on this page. If you're on your timeline, X has probably changed its layout.";
+    } else if (!stats.profiles) {
+      text = `This page: ${fmt(stats.found)} ${stats.found === 1 ? 'post' : 'posts'} found, but no author bios could be read, so posts are judged on their words and names alone. Reload the page. If that doesn't help, X has changed how it loads profiles.`;
     } else {
       const parts = [
-        [n('stamped', 'ready', 'restored'), 'translated'],
-        [n('kept'), 'left as written'],
-        [n('short'), 'too short'],
-        [n('waiting', 'asking', 'expanding', 'new'), 'not read yet'],
+        [n('flagged'), 'marked'],
+        [n('kept'), 'left alone'],
+        [n('unknown'), 'waiting for a bio'],
+        [n('waiting', 'asking', 'new'), 'not read yet'],
         [n('skipped'), 'waiting for a key'],
       ].filter(([count]) => count);
       text = `This page: ${fmt(stats.found)} ${stats.found === 1 ? 'post' : 'posts'} found` + (parts.length ? `, ${parts.map(([count, label]) => `${fmt(count)} ${label}`).join(', ')}.` : '.');
@@ -99,7 +101,7 @@ async function pageLine() {
     const line = el('p', 'page num', text);
     body.append(line);
   } catch {
-    // Not a LinkedIn tab, or the page was open before the extension was loaded.
+    // Not an X tab, or the page was open before the extension was loaded.
   }
 }
 

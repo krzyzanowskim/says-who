@@ -1,86 +1,84 @@
-import { PURPOSES, EXTRAS, SENSITIVE, TOPICS, NONE } from './intents.js';
-import { findAmounts, findOrgs, findNames, findRoles, findYears } from './text.js';
-
-// Speculative questions for the specific sentences. Each picks one candidate copied from
-// the post, or none. They are asked with every post because answers arrive in parallel
-// and cost a few tokens; the code only reads the ones the main purpose needs.
-export const SLOTS = {
-  joining: { from: 'orgs', ask: 'If the author of `post` is starting a new job or internship, which organisation are they joining?' },
-  employer: {
-    from: 'orgs',
-    ask: 'Which organisation does the author of `post` work for, or which are they leaving, retiring from or laid off from?',
-  },
-  partner: { from: 'orgs', ask: 'If `post` announces a partnership or a new customer, which other organisation is it?' },
-  role: { from: 'roles', ask: 'Which job title does the author of `post` say they now have, are starting, or are looking for?' },
-  amount: { from: 'amounts', ask: 'If `post` announces that a company raised money from investors, which amount did it raise in this round?' },
-  years: { from: 'years', ask: 'How long has the author of `post` worked at their company or in their career?' },
-  product: {
-    from: 'names',
-    ask: 'What is the name of the product, app, service, feature, course or book that `post` announces or promotes?',
-  },
-  event: {
-    from: 'names',
-    ask: 'What is the name of the event, conference, summit or webinar the author of `post` attended, is speaking at, or is promoting?',
-  },
-  award: { from: 'names', ask: 'What is the name of the award, honour or list that the author of `post` received or was named on?' },
-  person: { from: 'people', ask: 'Who is the person the author of `post` congratulates, praises, welcomes to the team or met?' },
-};
+import { TAKES, STAKES, BASIS, KNOWN, NONE } from './stakes.js';
+import { findMentions, findNames, findOrgs, findWares } from './text.js';
 
 const merge = (...lists) => {
   const seen = new Map();
-  for (const item of lists.flat()) if (!seen.has(item.toLowerCase())) seen.set(item.toLowerCase(), item);
+  for (const item of lists.flat()) if (item && !seen.has(item.toLowerCase())) seen.set(item.toLowerCase(), item);
   return [...seen.values()].slice(0, 16);
 };
 
-export function candidates({ text, mentionedOrgs = [], mentionedPeople = [] }) {
-  const names = findNames(text, mentionedOrgs);
-  return {
-    orgs: merge(findOrgs(text, mentionedOrgs), names),
-    roles: findRoles(text),
-    amounts: findAmounts(text),
-    years: findYears(text),
-    names,
-    people: merge(mentionedPeople, names),
-  };
+// Organisations the author names: X's own affiliation badge, accounts the bio or the post
+// points at, and capitalised names in the bio. Jev can only pick one of these, so the
+// note never names a company the author doesn't.
+export function candidates({ bio = '', label = '' }, text = '') {
+  return merge(label ? [label] : [], findMentions(bio), findOrgs(bio), findNames(bio), findOrgs(text), findMentions(text));
 }
 
-// Builds the single Jev request for one post. Every question is answered in parallel
-// against the same state.
-export function buildRequest({ text, mentionedOrgs = [], mentionedPeople = [], model = 'jev-latest' }) {
+// A second, small request about the account alone, sent only when a post is an opinion
+// about AI and nothing on the profile or in the post says how its author earns a living.
+// It carries no post and no bio, so the answer rests only on who the account is.
+export function buildKnownRequest({ handle, name = '', model = 'jev-latest' }) {
+  return { model, state: { author_handle: `@${handle}`, author_name: name }, questions: { known: { type: 'choice', ...KNOWN } } };
+}
+
+// Builds the main Jev request for one post and its author. Every question is answered
+// in parallel against the same state.
+export function buildRequest({ text, author = {}, model = 'jev-latest' }) {
+  const state = { post: text, author_name: author.name || '', author_handle: author.handle ? `@${author.handle}` : '', author_bio: author.bio || '' };
+  if (author.label) state.author_badge = author.label;
+  if (author.link) state.author_link = author.link;
+  if (author.category) state.author_category = author.category;
+  const profile = Object.keys(state).filter((k) => k !== 'post').map((k) => `\`${k}\``).join(', ');
+
   const questions = {
-    purpose: {
+    take: {
       type: 'choice',
       instructions: {
-        question: 'What is the main purpose of `post`?',
-        focus: 'Judge what the author most wants readers to take away, reading past the storytelling, emoji, line breaks and hashtags.',
+        question: 'What is `post` doing?',
+        focus: 'Judge what the author most wants readers to believe, reading past jokes, threads, emoji and hashtags. Go only by the words of `post` itself. The author’s profile is not part of the post and says nothing about its subject, and a reply must not be read in the light of a post you cannot see. If the words of `post` alone do not make a claim, it is a fragment.',
       },
-      criteria: Object.fromEntries(Object.entries(PURPOSES).map(([id, p]) => [id, p.criteria])),
+      criteria: Object.fromEntries(Object.entries(TAKES).map(([id, t]) => [id, t.criteria])),
     },
-    sensitive: { type: 'noul', ...SENSITIVE },
-    topic: {
+    stake: {
       type: 'choice',
-      instructions: 'Which topic is `post` mainly about?',
-      criteria: { ...Object.fromEntries(TOPICS.map((t) => [t, null])), [NONE]: 'None of these topics fits the post.' },
+      instructions: {
+        question: `Going by the profile (${profile}) and by what the author says about themselves in \`post\`, how does the author earn a living?`,
+        focus: 'Use only what the profile states and what the author says of their own work in the post. Having an opinion about AI is not evidence of being paid by it. A company counts as an AI company only if the profile or the post says AI is what it builds or sells, or it is widely known for that. A post in which the author launches, announces or promotes an AI or agentic product as their own or their company’s does say so. Do not rely on what you know about the person.',
+      },
+      criteria: Object.fromEntries(Object.entries(STAKES).map(([id, s]) => [id, s.criteria])),
     },
   };
 
-  for (const [id, extra] of Object.entries(EXTRAS)) {
-    questions[`extra_${id}`] = { type: 'noul', instructions: extra.instructions, criteria: extra.criteria };
-  }
+  questions.basis = {
+    type: 'choice',
+    instructions: `Where is the author’s work stated: in the profile (${profile}) or in \`post\`?`,
+    criteria: BASIS,
+  };
 
-  const found = candidates({ text, mentionedOrgs, mentionedPeople });
-  for (const [id, slot] of Object.entries(SLOTS)) {
-    const list = found[slot.from];
-    if (!list.length) continue;
-    questions[`slot_${id}`] = {
+  const orgs = candidates(author, text);
+  if (orgs.length) {
+    questions.org = {
       type: 'choice',
-      instructions: slot.ask,
+      instructions: `Which of these does the profile (${profile}) or \`post\` name as the AI company, fund or product the author works at, runs, invests through or sells?`,
       criteria: {
-        ...Object.fromEntries(list.map((value) => [value, null])),
-        [NONE]: 'The post does not say, or the answer is not in this list.',
+        ...Object.fromEntries(orgs.map((value) => [value, null])),
+        [NONE]: 'The profile does not say, or the answer is not in this list.',
       },
     };
   }
 
-  return { model, state: { post: text }, questions };
+  // What they sell, in their own words. The post comes first: it is the freshest pitch.
+  const wares = merge(findWares(text), findWares(author.bio));
+  if (wares.length) {
+    questions.wares = {
+      type: 'choice',
+      instructions: `Which of these phrases, copied from \`post\` or the profile, best names what the author or their company builds or sells?`,
+      criteria: {
+        ...Object.fromEntries(wares.map((value) => [value, null])),
+        [NONE]: 'None of these names something the author builds or sells.',
+      },
+    };
+  }
+
+  return { model, state, questions };
 }

@@ -1,5 +1,5 @@
-// Loads the unpacked extension into Chromium, serves the test feed at
-// https://www.linkedin.com/feed/, scrolls through it and checks what happened.
+// Loads the unpacked extension into Chromium, serves the test timeline at
+// https://x.com/home, scrolls through it and checks what happened.
 //
 //   node test/e2e.mjs                       mock Jev answers (no key needed)
 //   TYPESAFE_API_KEY=... node test/e2e.mjs  real Jev
@@ -10,8 +10,8 @@ import { mkdtemp, readFile, mkdir, rm } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { feedHtml, postHtml, sduiFeedHtml } from './feed.mjs';
-import { normalise } from '../extension/lib/text.js';
+import { feedHtml, timelineJson } from './feed.mjs';
+import { normalise, mentionsAI } from '../extension/lib/text.js';
 
 // A gitignored .env with TYPESAFE_API_KEY=... works as well as the environment variable.
 try {
@@ -25,75 +25,68 @@ const KEY = process.env.TYPESAFE_API_KEY;
 const MOCK = !KEY || process.argv.includes('--mock');
 const DARK = process.argv.includes('--dark');
 const HEADED = process.argv.includes('--headed');
-const SDUI = process.argv.includes('--sdui');
-const SUFFIX = `${SDUI ? '-new' : ''}${DARK ? '-dark' : ''}`;
+const SUFFIX = DARK ? '-dark' : '';
 await mkdir(OUT, { recursive: true });
 
 const posts = JSON.parse(await readFile(path.join(root, 'test', 'posts.json'), 'utf8'));
-const shortPost = { id: 'short', author: 'Wren Hollis', expect: ['short'], text: 'Excited to announce I got a new job at Northwind! 🎉 #newjob' };
-const reshare = {
-  id: 'reshare',
-  author: 'Pieter Galloway',
-  expect: ['short'],
-  text: 'So proud of this team. Congratulations everyone!',
+const byId = (id) => posts.find((p) => p.id === id);
+// Three words are still an opinion.
+const shortPost = { id: 'short', author: 'Nell Aziz', handle: 'nellaziz', bio: 'CEO of an AI lab.', expect: 'flagged', take: 'hype', stake: 'founder', text: 'AI is so back 🚀' };
+// Nothing to do with AI, from someone whose other post on the page earned a note: left alone.
+const aside = { id: 'aside', author: 'Dana Whitlock', handle: 'danawhitlock', bio: byId('founder-jobs').bio, link: 'lumenagents.ai', expect: 'kept', take: 'not_ai', stake: 'founder', text: 'Lunch.' };
+// A baker's own remark, quoting a founder. Only the baker's words and profile count.
+const quoting = {
+  id: 'quoting',
+  author: 'Tessa Okafor',
+  handle: 'tessabakes',
+  bio: 'I run a bakery in Leeds. Sourdough, mostly.',
+  expect: 'kept',
+  take: 'criticism',
+  stake: 'unstated',
+  text: 'Not sure I buy this. AI can write my menu but it has never once got up at 4am to proof dough.',
+  quote: byId('founder-jobs'),
 };
-
-// Feed order: a few long posts first so the top screenshot has variety, then the rest.
-const order = ['new-job-sample', 'technical', 'launch', 'advice-list', 'grief', 'fundraise', 'parable-candidate', 'engagement-guide'];
-const feedPosts = [...order.map((id) => posts.find((p) => p.id === id)), ...posts.filter((p) => !order.includes(p.id))];
-feedPosts.find((p) => p.id === 'launch').image = true;
-const withShort = [...feedPosts.slice(0, 3), shortPost, ...feedPosts.slice(3)];
-let html;
-if (SDUI) {
-  // Someone else's "likes this" line sits above the author, and a long comment sits under a post.
-  withShort.find((p) => p.id === 'launch').likedBy = 'Sam Reyes';
-  withShort.find((p) => p.id === 'technical').comment =
-    'Great write-up. We saw the same thing with statistics targets on a multi-tenant table, and raising it fixed our planner choices too. One thing to add: partial indexes need the exact same WHERE clause in the query, or the planner will not use them.';
-  // Most real posts are clipped by CSS rather than cut short.
-  for (const id of ['technical', 'advice-list', 'opinion', 'regulation']) withShort.find((p) => p.id === id).clamp = true;
-  html = sduiFeedHtml(withShort, { dark: DARK });
-} else {
-  html = feedHtml(withShort, { dark: DARK });
-  // A reshare: its own short commentary wraps someone else's long post.
-  html = html.replace(
-    '</main>',
-    postHtml(reshare, 90, { nested: postHtml(posts.find((p) => p.id === 'milestone'), 91) }) + '\n</main>',
-  );
-}
+byId('investor-prediction').image = true;
+// A repost: the reposter is named above the post, but the words and the stake are the author's.
+byId('employee-hype').repostedBy = 'tessabakes';
+const feedPosts = [...posts.slice(0, 3), shortPost, ...posts.slice(3), quoting, aside];
+const half = Math.ceil(feedPosts.length / 2);
+const html = feedHtml({ dark: DARK });
 
 // ---------- mock Jev ----------
 
+const spread = (ids, winner) => Object.fromEntries(ids.map((k) => [k, k === winner ? 0.9 : 0.1 / (ids.length - 1)]));
+
 function mockAnswer(body) {
+  if (body.questions.known) {
+    const famous = feedPosts.some((p) => p.mockKnown && `@${p.handle}` === body.state.author_handle);
+    const choice = famous ? 'ai_insider' : 'unknown';
+    return { model: 'mock-jev', answers: { known: { type: 'choice', choice, confidence: 0.98, probabilities: { [choice]: 0.98 } } }, usage: { input_tokens: 0, output_tokens: 0 } };
+  }
   const text = body.state.post;
-  const post = posts.find((p) => normalise(p.text).slice(0, 50) === text.slice(0, 50));
-  const sad = /lost my father|depression/.test(text);
-  const expect = post?.expect[0] ?? 'substantive';
-  const purpose = expect === 'keep' ? (sad ? 'personal_life' : 'substantive') : expect;
-  const ids = Object.keys(body.questions.purpose.criteria);
+  const post = feedPosts.find((p) => normalise(p.text).slice(0, 50) === text.slice(0, 50));
+  const take = post?.take ?? 'information';
+  const stake = post?.stake ?? 'unstated';
   const answers = {
-    purpose: {
-      type: 'choice',
-      choice: purpose,
-      confidence: 0.86,
-      probabilities: Object.fromEntries(ids.map((k) => [k, k === purpose ? 0.9 : 0.1 / (ids.length - 1)])),
-    },
-    sensitive: { type: 'noul', noul: sad ? 0.96 : 0.02 },
-    extra_asks_engagement: { type: 'noul', noul: /Agree\?|Comment "|Repost|like, comment|Change my mind|Tag someone/.test(text) ? 0.93 : 0.04 },
-    extra_selling: { type: 'noul', noul: /course|40% off|free for your first/.test(text) ? 0.9 : 0.05 },
-    extra_humblebrag: { type: 'noul', noul: post?.expect.includes('humblebrag') ? 0.9 : 0.1 },
+    take: { type: 'choice', choice: take, confidence: 0.9, probabilities: spread(Object.keys(body.questions.take.criteria), take) },
+    stake: { type: 'choice', choice: stake, confidence: 0.9, probabilities: spread(Object.keys(body.questions.stake.criteria), stake) },
   };
-  answers.topic = { type: 'choice', choice: 'none_of_these', confidence: 0.9, probabilities: { none_of_these: 0.9 } };
-  for (const [slot, want] of [['slot_joining', post?.org], ['slot_amount', post?.amount], ['slot_role', post?.role], ['slot_event', post?.event]]) {
-    if (!body.questions[slot]) continue;
-    const choice = want && want in body.questions[slot].criteria ? want : 'none_of_these';
-    answers[slot] = { type: 'choice', choice, confidence: 0.9, probabilities: { [choice]: 0.95 } };
+  const basis = post?.source === 'post' ? 'post' : stake === 'unstated' ? 'neither' : 'profile';
+  answers.basis = { type: 'choice', choice: basis, confidence: 0.9, probabilities: { [basis]: 0.9 } };
+  if (body.questions.org) {
+    const choice = post?.org && post.org in body.questions.org.criteria ? post.org : 'none_of_these';
+    answers.org = { type: 'choice', choice, confidence: 0.9, probabilities: { [choice]: 0.95 } };
+  }
+  if (body.questions.wares) {
+    const choice = post?.product && post.product in body.questions.wares.criteria ? post.product : 'none_of_these';
+    answers.wares = { type: 'choice', choice, confidence: 0.9, probabilities: { [choice]: 0.95 } };
   }
   return { model: 'mock-jev', answers, usage: { input_tokens: 0, output_tokens: 0 } };
 }
 
 // ---------- browser ----------
 
-const profile = await mkdtemp(path.join(os.tmpdir(), 'iow-profile-'));
+const profile = await mkdtemp(path.join(os.tmpdir(), 'sw-profile-'));
 const context = await chromium.launchPersistentContext(profile, {
   channel: 'chromium',
   headless: !HEADED,
@@ -104,156 +97,110 @@ const context = await chromium.launchPersistentContext(profile, {
 });
 
 let apiCalls = 0;
+const sent = [];
 await context.route('https://api.typesafe.ai/**', async (route) => {
   apiCalls++;
-  if (!MOCK) return route.continue();
   const body = JSON.parse(route.request().postData());
-  await new Promise((r) => setTimeout(r, 700));
+  sent.push(body);
+  if (!MOCK) return route.continue();
+  await new Promise((r) => setTimeout(r, 400));
   await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(mockAnswer(body)) });
 });
-await context.route('https://www.linkedin.com/**', (route) =>
-  route.request().url().includes('/feed')
-    ? route.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body: html })
-    : route.fulfill({ status: 204, body: '' }),
-);
+await context.route('https://x.com/**', (route) => {
+  const url = route.request().url();
+  if (url.includes('/i/api/graphql/')) {
+    const part = url.includes('half=1') ? feedPosts.slice(0, half) : feedPosts.slice(half);
+    return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(timelineJson(part)) });
+  }
+  if (url.endsWith('/home')) return route.fulfill({ status: 200, contentType: 'text/html; charset=utf-8', body: html });
+  return route.fulfill({ status: 204, body: '' });
+});
 
 let [worker] = context.serviceWorkers();
 if (!worker) worker = await context.waitForEvent('serviceworker');
 const extensionId = new URL(worker.url()).host;
 await worker.evaluate(
-  (apiKey) => chrome.storage.local.set({ settings: { apiKey, enabled: true, threshold: 0.5, minWords: 30, model: 'jev-latest' } }),
+  (apiKey) => chrome.storage.local.set({ settings: { apiKey, enabled: true, threshold: 0.6, model: 'jev-latest' } }),
   KEY || 'mock-key',
 );
 
 const page = await context.newPage();
-page.on('console', (m) => m.type() === 'error' && console.log('page error:', m.text()));
-page.on('pageerror', (e) => console.log('page exception:', e.message));
+const errors = [];
+page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+page.on('pageerror', (e) => errors.push(e.message));
 const shot = (name, opts = {}) => page.screenshot({ path: path.join(OUT, `${name}${SUFFIX}.png`), ...opts });
 
-await page.goto('https://www.linkedin.com/feed/');
-await page.waitForTimeout(250);
-// Heights of every post as first drawn. Stamping must not change any of them.
-const firstHeights = await page.evaluate(() =>
-  [...document.querySelectorAll('[role="listitem"], [data-urn]')].filter((e) => !e.parentElement.closest('[role="listitem"], [data-urn]')).map((e) => Math.round(e.getBoundingClientRect().height)),
-);
+await page.goto('https://x.com/home');
+await page.waitForSelector('article');
 await shot('01-before');
+await page.waitForSelector('.sw-writing', { timeout: 30000 }).catch(() => {});
+await page.waitForTimeout(900);
+await shot('02-after');
 
-// Catch a stamp part-way down.
-await page.waitForSelector('.iow-landing', { timeout: 30000 }).catch(() => {});
-await page.waitForTimeout(140);
-await shot('02-stamping');
-await page.waitForTimeout(1600);
-await shot('03-after');
-// Before any scrolling: nothing below the screen has played yet, nothing fully in view is still waiting.
-const playState = await page.evaluate(() =>
-  [...document.querySelectorAll('.iow-veil')].map((v) => {
-    const n = v.querySelector('.iow-note').getBoundingClientRect();
-    return { inView: n.top >= 0 && n.bottom <= innerHeight * 0.88, waiting: v.classList.contains('iow-waiting') };
-  }),
-);
-// The overlay must add no height of its own: each written-over post measures the same
-// with its overlay hidden.
-const overlayHeights = await page.evaluate(() =>
-  [...document.querySelectorAll('[data-iow="stamped"]')].map((root) => {
-    const veil = root.querySelector(':scope > .iow-veil');
-    const withVeil = root.getBoundingClientRect().height;
-    veil.style.display = 'none';
-    const without = root.getBoundingClientRect().height;
-    veil.style.removeProperty('display');
-    return Math.round(withVeil - without);
-  }),
-);
-const pen = await page.evaluate(() => ({
-  font: document.fonts.check('700 20px "IOW Kalam"') && [...document.fonts].some((f) => f.family.includes('IOW Kalam') && f.status === 'loaded'),
-  fontUsed: getComputedStyle(document.querySelector('.iow-says') || document.body).fontFamily,
-  strikes: [...document.querySelectorAll('.iow-veil')].map((v) => v.querySelectorAll('.iow-scribbles path').length),
-}));
-const resized = overlayHeights.filter((d) => Math.abs(d) > 1);
-
-// Scroll the whole feed like a reader would.
+// Scroll the whole timeline like a reader would.
 for (let i = 0; i < 40; i++) {
   const atEnd = await page.evaluate(() => {
     window.scrollBy(0, 500);
     return innerHeight + scrollY >= document.body.scrollHeight - 4;
   });
-  await page.waitForTimeout(MOCK ? 450 : 900);
+  await page.waitForTimeout(MOCK ? 350 : 900);
   if (atEnd) break;
 }
-await page.waitForTimeout(MOCK ? 1500 : 5000);
+await page.waitForTimeout(MOCK ? 1200 : 5000);
+
+const read = () =>
+  page.evaluate(() =>
+    [...document.querySelectorAll('article')].map((el) => ({
+      handle: el.querySelector('[data-testid="User-Name"] a').getAttribute('href').slice(1),
+      text: el.querySelector('[data-testid="tweetText"]').textContent,
+      state: el.dataset.sw,
+      notes: el.querySelectorAll('.sw-note').length,
+      says: el.querySelector('.sw-says')?.textContent || null,
+      why: el.querySelector('.sw-note')?.title || null,
+      lines: el.querySelectorAll('.sw-note p').length,
+      blank: Boolean(el.querySelector('.sw-blank')),
+      // The note belongs right under the post's own text, never inside a quoted post.
+      placed: el.querySelector('.sw-note') ? el.querySelector('.sw-note').previousElementSibling?.dataset.testid === 'tweetText' && !el.querySelector('.sw-note').closest('.quote') : null,
+    })),
+  );
+const states = await read();
+const pen = await page.evaluate(() => ({
+  font: [...document.fonts].some((f) => f.family.includes('SW Kalam') && f.status === 'loaded'),
+  build: document.documentElement.dataset.saysWho,
+}));
 await page.evaluate(() => window.scrollTo(0, 0));
-await page.waitForTimeout(400);
+await page.waitForTimeout(300);
+await shot('03-timeline-full', { fullPage: true });
 
-const stuckWaiting = await page.evaluate(() =>
-  [...document.querySelectorAll('.iow-veil.iow-waiting')].map((v) => {
-    const root = v.parentElement;
-    const r = root.getBoundingClientRect();
-    const n = v.querySelector('.iow-note').getBoundingClientRect();
-    return { post: Math.round(r.height), note: Math.round(n.height), veil: Math.round(v.getBoundingClientRect().height), noteTopInVeil: Math.round(n.top - v.getBoundingClientRect().top) };
-  }),
-);
-const loads = SDUI ? await page.evaluate(() => window.__loads) : null;
-// Posts left as written stay exactly as LinkedIn drew them: "… more" is never pressed.
-const keptOpen = SDUI ? null : await page.evaluate(() =>
-  [...document.querySelectorAll('[data-iow="kept"]')].map((el) => Boolean(el.querySelector('.feed-shared-inline-show-more-text.open'))),
-);
-const states = await page.evaluate(() =>
-  [...document.querySelectorAll('[data-iow]')].map((el) => ({
-    author: el.querySelector('.update-components-actor__title [aria-hidden], .n1 span')?.textContent,
-    headerVisible: (() => {
-      const head = el.querySelector('.update-components-actor, .actor');
-      const veil = el.querySelector(':scope > .iow-veil');
-      if (!head || !veil) return true;
-      return head.getBoundingClientRect().bottom <= veil.getBoundingClientRect().top + 1;
-    })(),
-    words: el.querySelector('[data-testid="expandable-text-box"], .update-components-text')?.textContent.split(/\s+/).length,
-    state: el.dataset.iow,
-    says: el.querySelector('.iow-says')?.textContent || null,
-    tally: el.querySelector('.iow-tally')?.textContent || null,
-  })),
-);
-await shot('04-feed-full', { fullPage: true });
+// A click on a note must not open the post it sits in.
+const openedBefore = await page.evaluate(() => window.__opened);
+await page.locator('.sw-note').first().click();
+const openedByNote = (await page.evaluate(() => window.__opened)) - openedBefore;
 
-// Lift the first stamp off, then put it back.
-const first = page.locator('.iow-veil .iow-button').first();
-await first.click();
+// X re-renders posts in place. A note that gets dropped is put back, once.
+await page.evaluate(() => document.querySelector('.sw-note').remove());
+await page.evaluate(() => document.querySelector('article').append(document.createElement('i')));
 await page.waitForTimeout(700);
-const restored = await page.evaluate(() => {
-  const mark = document.querySelector('.iow-mark');
-  const root = mark?.parentElement;
-  return {
-    mark: mark?.getAttribute('aria-label'),
-    stampGone: root ? !root.querySelector(':scope > .iow-veil') : false,
-    focus: document.activeElement?.getAttribute('aria-label'),
-  };
-});
-await shot('05-restored');
-await page.locator('.iow-mark').first().click();
-await page.waitForTimeout(900);
-const recollapsed = await page.evaluate(() => document.querySelectorAll('.iow-stamped').length);
+const afterRedraw = (await read()).filter((s) => s.state === 'flagged').map((s) => s.notes);
 
-// A post clipped by CSS: "Show original" must open it fully, with nothing left frozen.
-const clampCheck = SDUI
-  ? await page.evaluate(async () => {
-      // A post clipped by CSS: after "Show original" it is back exactly as LinkedIn drew it.
-      const root = [...document.querySelectorAll('[data-iow="stamped"]')].find((r) => r.querySelector('.clamp3'));
-      if (!root) return { found: false };
-      root.scrollIntoView({ block: 'center' });
-      await new Promise((r) => setTimeout(r, 2500));
-      root.querySelector('.iow-veil .iow-button').click();
-      await new Promise((r) => setTimeout(r, 2500));
-      const box = root.querySelector('[data-testid="expandable-text-box"]');
-      const bar = root.querySelector('.action-bar');
-      const frozen = [...root.querySelectorAll('*')].filter((n) => n.style && n.style.height).map((n) => n.tagName + ' ' + n.style.height);
-      return { found: true, untouched: box.classList.contains('clamp3'), frozen, overlaps: box.getBoundingClientRect().bottom > bar.getBoundingClientRect().top + 1, restored: root.dataset.iow === 'restored' };
-    })
-  : null;
-const keptClampOpen = SDUI
-  ? await page.evaluate(() => [...document.querySelectorAll('[data-iow="kept"]')].map((r) => Boolean(r.querySelector('.open-9f2'))))
-  : null;
+const popup = await context.newPage();
+await popup.setViewportSize({ width: 320, height: 240 });
+await popup.goto(`chrome-extension://${extensionId}/popup.html`);
+await popup.waitForTimeout(300);
+await popup.screenshot({ path: path.join(OUT, `04-popup${SUFFIX}.png`) });
+const popupText = await popup.evaluate(() => document.body.innerText);
+
+const options = await context.newPage();
+await options.setViewportSize({ width: 900, height: 900 });
+await options.goto(`chrome-extension://${extensionId}/options.html`);
+await options.waitForTimeout(300);
+await options.screenshot({ path: path.join(OUT, `05-options${SUFFIX}.png`), fullPage: true });
+const optionsText = await options.evaluate(() => document.body.innerText);
 
 // Reload: every result should come from the saved results, with no new requests.
 const callsBeforeReload = apiCalls;
 await page.reload();
+await page.waitForSelector('article');
 for (let i = 0; i < 40; i++) {
   const atEnd = await page.evaluate(() => {
     window.scrollBy(0, 700);
@@ -264,63 +211,15 @@ for (let i = 0; i < 40; i++) {
 }
 await page.waitForTimeout(800);
 const callsAfterReload = apiCalls - callsBeforeReload;
+const afterReload = await read();
 
-// Jump stability: open the feed in a new tab and go straight to the middle, before anything
-// has been read. While posts above the screen expand and fold, what's at the top of the
-// screen must not move.
+// Pausing takes every note off the page.
 await worker.evaluate(async () => {
-  const all = await chrome.storage.local.get(null);
-  await chrome.storage.local.remove(Object.keys(all).filter((k) => k.startsWith('j:')));
+  const { settings } = await chrome.storage.local.get('settings');
+  await chrome.storage.local.set({ settings: { ...settings, enabled: false } });
 });
-const jumpy = await context.newPage();
-await jumpy.goto('https://www.linkedin.com/feed/');
-await jumpy.evaluate(() => window.scrollTo(0, 3200));
-await jumpy.waitForTimeout(150);
-const jumpResult = await jumpy.evaluate(async () => {
-  // Track the post box under that point, not an element inside it: text loading inside a
-  // post that is being read is expected, the post itself moving is a jump.
-  // (The first post whose bottom is below that point, so a gap between posts can't pick the whole list.)
-  const tops = [...document.querySelectorAll('[role="listitem"], [data-urn]')].filter((el) => !el.parentElement.closest('[role="listitem"], [data-urn]'));
-  const anchor = tops.find((el) => el.getBoundingClientRect().bottom > 160);
-  const start = anchor.getBoundingClientRect().top;
-  let worst = 0;
-  let last = start;
-  const log = [];
-  const items = () => [...document.querySelectorAll('[data-iow]')];
-  const snap = () => items().map((e, i) => `${i}:${e.dataset.iow}@${Math.round(e.getBoundingClientRect().top)}/${Math.round(e.getBoundingClientRect().height)}`).filter((x) => !/@-?\d{5}/.test(x));
-  let prev = snap();
-  for (let i = 0; i < 45; i++) {
-    await new Promise((r) => setTimeout(r, 100));
-    const top = anchor.getBoundingClientRect().top;
-    worst = Math.max(worst, Math.abs(top - start));
-    if (Math.abs(top - last) > 1) {
-      const now = snap();
-      log.push(`t=${i * 100}ms anchor ${Math.round(last)}->${Math.round(top)} scrollY ${Math.round(scrollY)} | changed: ${now.filter((x, j) => x !== prev[j]).join(' ')}`);
-    }
-    prev = snap();
-    last = top;
-  }
-  return { worst: Math.round(worst), log };
-});
-const drift = jumpResult.worst;
-if (jumpResult.log.length) console.log(jumpResult.log.join('\n'));
-const jumpStates = await jumpy.evaluate(() => [...document.querySelectorAll('[data-iow]')].map((e) => e.dataset.iow).join(' '));
-console.log(`jump test: top of screen moved at most ${drift}px; states ${jumpStates}`);
-await jumpy.close();
-
-// Popup and settings page.
-const popup = await context.newPage();
-await popup.setViewportSize({ width: 320, height: 240 });
-await popup.goto(`chrome-extension://${extensionId}/popup.html`);
-await popup.waitForTimeout(300);
-await popup.screenshot({ path: path.join(OUT, `06-popup${SUFFIX}.png`) });
-const popupText = await popup.evaluate(() => document.body.innerText);
-
-const options = await context.newPage();
-await options.setViewportSize({ width: 900, height: 900 });
-await options.goto(`chrome-extension://${extensionId}/options.html`);
-await options.waitForTimeout(300);
-await options.screenshot({ path: path.join(OUT, `07-options${SUFFIX}.png`), fullPage: true });
+await page.waitForTimeout(600);
+const notesWhenPaused = await page.evaluate(() => document.querySelectorAll('.sw-note').length);
 
 await context.close();
 await rm(profile, { recursive: true, force: true });
@@ -328,45 +227,69 @@ await rm(profile, { recursive: true, force: true });
 // ---------- report ----------
 
 const count = (s) => states.filter((x) => x.state === s).length;
-console.log(states.map((s) => `${s.state.padEnd(10)} ${String(s.author).padEnd(22)} ${s.says ? `"${s.says}"  ${s.tally}` : ''}`).join('\n'));
-console.log(`\n${MOCK ? 'Mock' : 'Real'} Jev: ${apiCalls} requests on first pass, ${callsAfterReload} after reload.`);
-console.log(`stamped ${count('stamped')}, kept ${count('kept')}, short ${count('short')}, other ${states.length - count('stamped') - count('kept') - count('short')}`);
-console.log('restore:', restored, 'stamped after re-stamp:', recollapsed);
-console.log(`height added by overlays: ${resized.length ? JSON.stringify(resized) : 'none'} (${overlayHeights.length} checked)`);
-console.log(`on load: ${playState.filter((p) => !p.waiting).length} played in view, ${playState.filter((p) => p.waiting).length} waiting below`);
-console.log(`clipped post after Show original: ${JSON.stringify(clampCheck)}; kept clipped posts opened by us: ${keptClampOpen}`);
-console.log(`load more pressed: ${loads ?? 'n/a'} times`);
-console.log(`pen: font loaded ${pen.font}, strike lines per post on screen ${pen.strikes.join(',')}`);
+console.log(states.map((s) => `${String(s.state).padEnd(9)} @${s.handle.padEnd(16)} ${s.says ? `"${s.says}"  ${s.why}` : ''}`).join('\n'));
+console.log(`\n${MOCK ? 'Mock' : 'Real'} Jev: ${callsBeforeReload} requests on first pass, ${callsAfterReload} after reload.`);
+console.log(`flagged ${count('flagged')}, kept ${count('kept')}, other ${states.length - count('flagged') - count('kept')}`);
+console.log(`pen: font loaded ${pen.font}, build ${pen.build}`);
 console.log('popup:', popupText.replace(/\s+/g, ' '));
 
 const failures = [];
-if (!count('stamped')) failures.push('nothing stamped');
-if (stuckWaiting.length) failures.push(`${stuckWaiting.length} overlays never played after scrolling past them: ${JSON.stringify(stuckWaiting)}`);
-if (clampCheck && (!clampCheck.found || !clampCheck.untouched || clampCheck.frozen.length || clampCheck.overlaps)) failures.push(`Show original on a clipped post went wrong: ${JSON.stringify(clampCheck)}`);
-if (keptClampOpen && keptClampOpen.some((open) => open)) failures.push(`"… more" was pressed on a clipped post left as written: ${keptClampOpen.join(',')}`);
-if (keptOpen && keptOpen.some((open) => open)) failures.push(`"… more" was pressed on a post left as written: ${keptOpen.join(',')}`);
-if (playState.some((p) => !p.inView && !p.waiting)) failures.push('a translation played before its handwriting was on screen');
-if (playState.some((p) => p.inView && p.waiting)) failures.push('a translation fully on screen never played');
-if (SDUI && !(loads >= 1)) failures.push('"Load more" was never pressed');
-if (!pen.font) failures.push('the handwriting font did not load');
-if (!pen.strikes.length || pen.strikes.some((n) => n === 0)) failures.push(`some translated posts have no strike lines: ${pen.strikes.join(',')}`);
-if (resized.length) failures.push(`${resized.length} overlays changed a post's height`);
-if (!overlayHeights.length) failures.push('no overlays to check');
-for (const s of states) if (!s.headerVisible) failures.push(`the stamp covers ${s.author}'s name and photo`);
-if (states.find((s) => s.author === 'Wren Hollis')?.state !== 'short') failures.push('short post was not skipped');
-if (!SDUI && states.find((s) => s.author === 'Pieter Galloway')?.state !== 'short') failures.push('reshare commentary was not treated as its own short post');
-if (states.length < withShort.length + (SDUI ? 0 : 1)) failures.push(`found ${states.length} posts, expected at least ${withShort.length + (SDUI ? 0 : 1)}`);
-const dana = states.find((s) => s.author === 'Dana Whitlock');
-if (!/^\d+ words cut/.test(dana?.tally || '') || dana.says.split(/\s+/).length + Number(dana.tally.split(' ')[0]) !== 87)
-  failures.push(`Dana's card should count all 87 words of the post, says ${dana?.says} / ${dana?.tally}`);
-if (drift > 2) failures.push(`reading position moved by ${drift}px while posts above it folded`);
-for (const name of ['Yusuf Brandt', 'Colm Beaumont', 'Esme Lindahl', 'Ingrid Solberg', 'Frederik Mwangi']) {
-  const s = states.find((x) => x.author === name);
-  if (s && s.state !== 'kept') failures.push(`${name}'s post should have been left alone, was ${s.state}`);
+const state = (handle, from = states) => from.find((s) => s.handle === handle);
+if (errors.length) failures.push(`page errors: ${errors.join(' | ')}`);
+if (states.length !== feedPosts.length) failures.push(`found ${states.length} posts, expected ${feedPosts.length}`);
+for (const post of feedPosts) {
+  const s = states.find((x) => x.handle === post.handle && x.text.startsWith(post.text.slice(0, 20)));
+  if (!s) continue;
+  // With real Jev the judgments are its own; the mock must match the expectations exactly.
+  if (MOCK && s.state !== post.expect) failures.push(`@${post.handle} (${post.id}) should be ${post.expect}, was ${s.state}`);
+  if (s.state === 'flagged' && (s.notes !== 1 || !s.placed)) failures.push(`@${post.handle} has ${s.notes} notes, placed under its own text: ${s.placed}`);
+  if (s.state === 'flagged' && s.lines !== 1) failures.push(`@${post.handle}'s note should be one line, has ${s.lines}`);
+  if (s.state === 'flagged' && /bio|Co-founder|General Partner/.test(s.says)) failures.push(`@${post.handle}'s note quotes the profile: ${s.says}`);
+  if (s.state !== 'flagged' && s.notes) failures.push(`@${post.handle} was ${s.state} but has a note`);
+  if (s.blank) failures.push(`@${post.handle}'s note was scrolled past but never written`);
 }
-if (!restored.stampGone || !restored.mark) failures.push('Show original did not lift the stamp');
-if (recollapsed !== count('stamped')) failures.push('the corner mark did not put the stamp back');
-if (callsAfterReload !== 0 && apiCalls > 0) failures.push(`reload made ${callsAfterReload} new requests`);
+if (!count('flagged')) failures.push('nothing flagged');
+if (MOCK) {
+  const want = {
+    danawhitlock: ['Says someone whose company sells it.', 'Their bio: “Co-founder & CEO @lumenagents. AI agents that write your code. Prev eng at Halcyon.”'],
+    marcusoye: ['Says someone whose paycheck comes from Northwind AI.', 'Badge on their profile: Northwind AI'],
+    hbrisk: ['Says someone whose money is riding on it.', null],
+    pietergalloway: ['Says someone with AI to sell you.', null],
+    kasperlind: ['Says the person selling AGENTIC TESTING.', null],
+    nellaziz: ['Says someone whose company sells it.', null],
+    niallfarrow: ['Says someone whose company sells it.', 'They say so in this post.'],
+    novalabs_hq: ['Says someone who makes money from AI.', 'Not on their profile. Jev recognises this account.'],
+  };
+  for (const [handle, [says, why]] of Object.entries(want)) {
+    const s = states.find((x) => x.handle === handle && x.says);
+    if (s?.says !== says || (why && !s?.why?.startsWith(why))) failures.push(`@${handle} should say "${says}"${why ? ` / "${why}"` : ''}, says "${s?.says}" / "${s?.why}"`);
+  }
+}
+// A post is sent only if it or its author's profile mentions AI and it is long enough.
+const sendable = feedPosts.filter((p) => p.viaMemory || mentionsAI(p.text) || mentionsAI(`${p.author}\n${p.handle}\n${p.bio}\n${p.label}\n${p.link}`));
+const posted = sent.filter((b) => b.questions.take);
+const whoAsked = sent.filter((b) => b.questions.known).map((b) => b.state.author_handle);
+if (MOCK && posted.length !== sendable.length) failures.push(`${posted.length} posts sent on first pass, expected ${sendable.length}`);
+// Who an account is gets asked only for posts talking AI up that neither the profile nor the post explains.
+if (MOCK && whoAsked.sort().join() !== '@jo_84213,@novalabs_hq') failures.push(`asked who these accounts are: ${whoAsked.join(', ')}`);
+if (sent.some((b) => b.questions.known && (b.state.post || b.state.author_bio))) failures.push('the question about who an account is carried a post or a bio');
+const dana = posted.find((b) => b.state.author_name === 'Dana Whitlock');
+if (!dana || !dana.state.author_bio.startsWith('Co-founder') || dana.state.author_link !== 'lumenagents.ai') failures.push(`Dana's profile was not sent as read: ${JSON.stringify(dana?.state)}`);
+const marcus = posted.find((b) => b.state.post.startsWith('People really'));
+if (marcus?.state.author_handle !== '@marcusoye') failures.push(`a repost was pinned on ${marcus?.state.author_handle}, not its author`);
+const tessa = posted.find((b) => b.state.author_name === 'Tessa Okafor');
+if (!tessa || !tessa.state.post.startsWith('Not sure I buy this') || tessa.state.post.includes('Software engineering')) failures.push(`the quoting post was not read as its own: ${JSON.stringify(tessa?.state)}`);
+// (With real Jev the invented account isn't recognised, so nothing establishes it.)
+if (MOCK && !posted.some((b) => /coding camps/.test(b.state.post))) failures.push('a later post by an author already found to be paid by AI was not sent');
+if (posted.some((b) => /hospital paperwork/.test(b.state.post))) failures.push('a post was sent although neither it nor its author mentions AI');
+if (!pen.font) failures.push('the handwriting font did not load');
+if (openedByNote) failures.push('clicking a note opened the post');
+if (afterRedraw.some((n) => n !== 1)) failures.push(`after a redraw, flagged posts have ${afterRedraw.join(',')} notes`);
+if (callsAfterReload !== 0) failures.push(`reload made ${callsAfterReload} new requests`);
+if (afterReload.filter((s) => s.state === 'flagged').length !== count('flagged')) failures.push('reload did not bring back the same notes');
+if (notesWhenPaused) failures.push(`${notesWhenPaused} notes left on the page after pausing`);
+if (!new RegExp(`${count('flagged')} posts? marked`).test(popupText)) failures.push(`popup total is wrong: ${popupText.replace(/\s+/g, ' ')}`);
+if (!/Says Who/.test(optionsText) || !/Says Who/.test(popupText)) failures.push('the settings page or the popup does not carry the extension name');
 if (failures.length) {
   console.log('\nFAILED:\n- ' + failures.join('\n- '));
   process.exit(1);
