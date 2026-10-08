@@ -16,9 +16,16 @@ mkdir -p "$stage/$name" release
 cp -R extension/. "$stage/$name/"
 find "$stage" -name '.DS_Store' -delete
 
-rm -f "release/$name.zip"
+rm -f "release/$name.zip" "release/$name-cws.zip"
 (cd "$stage" && zip -qrX "$OLDPWD/release/$name.zip" "$name")
 (cd release && shasum -a 256 "$name.zip" > "$name.zip.sha256")
 
-echo "release/$name.zip"
+# Chrome Web Store requires manifest.json directly at the root of the zip archive.
+(cd extension && zip -qrX "$OLDPWD/release/$name-cws.zip" . -x "*.DS_Store*")
+(cd release && shasum -a 256 "$name-cws.zip" > "$name-cws.zip.sha256")
+
+echo "GitHub unpacked release: release/$name.zip"
 cat "release/$name.zip.sha256"
+echo "Chrome Web Store upload: release/$name-cws.zip"
+cat "release/$name-cws.zip.sha256"
+
